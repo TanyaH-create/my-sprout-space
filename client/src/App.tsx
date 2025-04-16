@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom"
-import NavBar from "./components/navbar"
+import NavBar from "./components/NavBar"
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import Footer from "./components/Footer";

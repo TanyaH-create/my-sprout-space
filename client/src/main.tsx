@@ -4,8 +4,8 @@ import './styles/index.css'
 import App from './App'
 import MainPage from './pages/MainPage.tsx'
 import ErrorPage from './pages/ErrorPage.tsx';
-import GardenPlanner from './pages/GardenPlanner.tsx'
-import ProfilePage from './pages/Profile.tsx'
+import GardenPlanner from './pages/GardenPlannerPage.tsx'
+import ProfilePage from './pages/ProfilePage.tsx'
 import AdminPage from './pages/AdminPage.tsx'
 
 console.log('Running MAIN.tsx')
