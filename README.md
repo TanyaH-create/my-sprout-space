@@ -1,9 +1,9 @@
-# **Sprout Space**
+# **My Garden Planner**
 
 ![License](https://img.shields.io/badge/license-MIT-brightgreen)
 
 ## 📜 **Overview/Description**
-Sprout Space is a gardening app that simplifies garden design using the popular square foot gardening method. By dividing your plot into one (1) square foot squares, you can plant according to the ideal spacing needs of each vegetable, fruit, or herb. Choose your garden size, pick your plants from a database of detailed plant profiles, and watch as your plot fills with customized planting cards, complete with planting instructions, harvest timelines, and more!
+My Garden Planner is a gardening app that simplifies garden design using the popular square foot gardening method. By dividing your plot into one (1) square foot squares, you can plant according to the ideal spacing needs of each vegetable, fruit, or herb. Choose your garden size, pick your plants from a database of detailed plant profiles, and watch as your plot fills with customized planting cards, complete with planting instructions, harvest timelines, and more!
 ##  🏃 **To run the application, click the link below:**
 🔗 **Live Application**: [Render Deploy Link](https://rendertest-v95r.onrender.com/)
 
