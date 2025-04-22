@@ -1,5 +1,6 @@
 import React from 'react';
 import { Plant } from '../types/garden';
+import { resolveImagePath, handleImageError } from '../utils/imageUtils';
 
 interface PlantPaletteProps {
   plants: Plant[];
@@ -35,11 +36,14 @@ export const PlantPalette: React.FC<PlantPaletteProps> = ({
           }}
           onClick={() => onPlantSelect({ ...plant, image: plant.image || '' })}
         >
-          <img
-            src={plant.image}
-            alt={plant.name}
-            style={{ width: '30px', height: '30px', marginBottom: '4px' }}
-          />
+          <div style={{ width: '30px', height: '30px', marginBottom: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <img
+              src={resolveImagePath(plant.image)}
+              alt={plant.name}
+              style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+              onError={(e) => handleImageError(e, plant.name)}
+            />
+          </div>
           <span style={{ fontSize: '12px', textAlign: 'center' }}>{plant.name}</span>
           <div className="plant-per-foot" style={{
             fontSize: '10px',

@@ -1,131 +1,11 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useQuery } from '@apollo/client';
+import { GET_ALL_PLANTS } from '../graphQL/queries'; // Adjust path as needed
+import PlantCard from './PlantCard';
+import { Plant, PlantData } from '../types/plantTypes';
+import { formatSpacing, formatWater } from '../utils/plantHelpers';
 import '../styles/gardentoolkit.css';
-
-/**
- * Interface defining a vegetable's properties
- */
-interface Vegetable {
-  readonly name: string;
-  readonly density: number;
-  readonly category: string;
-  readonly spacing: string;
-  readonly water: string;
-  readonly waterDetails: string;
-  readonly sunlight: string;
-}
-
-/**
- * Complete vegetable data based on provided list
- */
-const vegetables: ReadonlyArray<Vegetable> = [
-    { name: 'Tomato', density: 0.5, category: 'Vegetable', spacing: '16-18"', water: '1-2 inches per week', waterDetails: 'Deep watering 2-3 times weekly; more during fruiting', sunlight: 'Full sun' },
-    { name: 'Carrot', density: 16, category: 'Vegetable', spacing: '3"', water: '1 inch per week', waterDetails: 'Consistent moisture; critical during germination', sunlight: 'Full sun' },
-    { name: 'Lettuce', density: 4, category: 'Vegetable', spacing: '6"', water: '1 inch per week', waterDetails: 'Frequent light watering; soil should never dry out', sunlight: 'Partial shade' },
-    { name: 'Cucumber', density: 1, category: 'Vegetable', spacing: '12"', water: '1-2 inches per week', waterDetails: 'Even moisture; increase when fruiting', sunlight: 'Full sun' },
-    { name: 'Zucchini', density: 0.5, category: 'Vegetable', spacing: '16-18"', water: '1-2 inches per week', waterDetails: 'Regular deep watering twice weekly', sunlight: 'Full sun' },
-    { name: 'Sunflower', density: 1, category: 'Flower', spacing: '12"', water: '1 inch per week', waterDetails: 'Deep watering; drought tolerant when established', sunlight: 'Full sun' },
-    { name: 'Basil', density: 9, category: 'Herb', spacing: '4"', water: '1 inch per week', waterDetails: 'Water when top inch of soil is dry', sunlight: 'Full sun' },
-    { name: 'Pepper', density: 1, category: 'Vegetable', spacing: '12"', water: '1-2 inches per week', waterDetails: 'Keep soil consistently moist', sunlight: 'Full sun' },
-    { name: 'Broccoli', density: 0.5, category: 'Vegetable', spacing: '16-18"', water: '1-1.5 inches per week', waterDetails: 'Consistent moisture', sunlight: 'Full sun' },
-    { name: 'Cauliflower', density: 0.5, category: 'Vegetable', spacing: '16-18"', water: '1-1.5 inches per week', waterDetails: 'Consistent moisture', sunlight: 'Full sun' },
-    { name: 'Onion', density: 9, category: 'Vegetable', spacing: '4"', water: '1 inch per week', waterDetails: 'Regular watering until tops begin to fall over', sunlight: 'Full sun' },
-    { name: 'Garlic', density: 9, category: 'Vegetable', spacing: '4"', water: '0.5-1 inch per week', waterDetails: 'Water weekly until bulb formation', sunlight: 'Full sun' },
-    { name: 'Potato', density: 1, category: 'Vegetable', spacing: '12"', water: '1-2 inches per week', waterDetails: 'Critical during flowering and tuber formation', sunlight: 'Full sun' },
-    { name: 'Sweet Potato', density: 1, category: 'Vegetable', spacing: '12"', water: '1 inch per week', waterDetails: 'Water deeply weekly', sunlight: 'Full sun' },
-    { name: 'Pumpkin', density: 0.25, category: 'Vegetable', spacing: '24-36"', water: '1-2 inches per week', waterDetails: 'Deep watering twice weekly', sunlight: 'Full sun' },
-    { name: 'Corn', density: 1, category: 'Vegetable', spacing: '12"', water: '1-1.5 inches per week', waterDetails: 'Critical during silking and ear development', sunlight: 'Full sun' },
-    { name: 'Asparagus', density: 1, category: 'Vegetable', spacing: '12"', water: '1-1.5 inches per week', waterDetails: 'Deep watering; needs consistent moisture first 2 years', sunlight: 'Full sun' },
-    { name: 'Beet', density: 9, category: 'Vegetable', spacing: '4"', water: '1 inch per week', waterDetails: 'Even, consistent moisture', sunlight: 'Full sun' },
-    { name: 'Bell Pepper', density: 1, category: 'Vegetable', spacing: '12"', water: '1-2 inches per week', waterDetails: 'Keep soil consistently moist', sunlight: 'Full sun' },
-    { name: 'Celery', density: 4, category: 'Vegetable', spacing: '6"', water: '1.5-2 inches per week', waterDetails: 'Never allow soil to dry out', sunlight: 'Partial shade' },
-    { name: 'Cabbage', density: 1, category: 'Vegetable', spacing: '12"', water: '1-1.5 inches per week', waterDetails: 'Even moisture; critical during head formation', sunlight: 'Full sun' },
-    { name: 'Eggplant', density: 0.5, category: 'Vegetable', spacing: '16-18"', water: '1-1.5 inches per week', waterDetails: 'Consistent moisture', sunlight: 'Full sun' },
-    { name: 'Kale', density: 1, category: 'Vegetable', spacing: '12"', water: '1-1.5 inches per week', waterDetails: 'Consistent moisture', sunlight: 'Full sun' },
-    { name: 'Spinach', density: 16, category: 'Vegetable', spacing: '3"', water: '1-1.5 inches per week', waterDetails: 'Keep soil consistently moist', sunlight: 'Partial shade' },
-    { name: 'Strawberry', density: 4, category: 'Fruit', spacing: '6"', water: '1-1.5 inches per week', waterDetails: 'Critical during fruit development', sunlight: 'Full sun' },
-    { name: 'Blueberry', density: 0.5, category: 'Fruit', spacing: '16-18"', water: '1-2 inches per week', waterDetails: 'Consistent moisture; needs acidic soil', sunlight: 'Full sun' },
-    { name: 'Raspberry', density: 0.5, category: 'Fruit', spacing: '16-18"', water: '1-2 inches per week', waterDetails: 'Deep watering 2-3 times weekly', sunlight: 'Full sun' },
-    { name: 'Watermelon', density: 0.25, category: 'Fruit', spacing: '24-36"', water: '1-2 inches per week', waterDetails: 'Deep watering; reduce as fruits ripen', sunlight: 'Full sun' },
-    { name: 'Cantaloupe', density: 0.25, category: 'Fruit', spacing: '24-36"', water: '1-2 inches per week', waterDetails: 'Deep watering; reduce as fruits ripen', sunlight: 'Full sun' },
-    { name: 'Radish', density: 16, category: 'Vegetable', spacing: '3"', water: '1 inch per week', waterDetails: 'Keep soil consistently moist', sunlight: 'Full sun' },
-    { name: 'Peas', density: 9, category: 'Vegetable', spacing: '4"', water: '1-1.5 inches per week', waterDetails: 'Consistent moisture during flowering and pod formation', sunlight: 'Full sun' },
-    { name: 'Beans', density: 9, category: 'Vegetable', spacing: '4"', water: '1 inch per week', waterDetails: 'Regular watering during flowering and pod development', sunlight: 'Full sun' },
-    { name: 'Okra', density: 1, category: 'Vegetable', spacing: '12"', water: '1 inch per week', waterDetails: 'Drought tolerant once established', sunlight: 'Full sun' },
-    { name: 'Brussels Sprouts', density: 0.5, category: 'Vegetable', spacing: '16-18"', water: '1-1.5 inches per week', waterDetails: 'Consistent moisture', sunlight: 'Full sun' },
-    { name: 'Artichoke', density: 0.25, category: 'Vegetable', spacing: '24-36"', water: '1-2 inches per week', waterDetails: 'Deep watering; needs consistent moisture during bud development', sunlight: 'Full sun' },
-    { name: 'Turnip', density: 9, category: 'Vegetable', spacing: '4"', water: '1 inch per week', waterDetails: 'Consistent moisture during root development', sunlight: 'Full sun' },
-    { name: 'Squash', density: 0.25, category: 'Vegetable', spacing: '24-36"', water: '1-2 inches per week', waterDetails: 'Deep watering twice weekly', sunlight: 'Full sun' },
-    { name: 'Mint', density: 9, category: 'Herb', spacing: '4"', water: '1-1.5 inches per week', waterDetails: 'Keep soil consistently moist', sunlight: 'Partial shade' },
-    { name: 'Rosemary', density: 1, category: 'Herb', spacing: '12"', water: '0.5 inch per week', waterDetails: 'Drought tolerant; allow soil to dry between waterings', sunlight: 'Full sun' },
-    { name: 'Thyme', density: 4, category: 'Herb', spacing: '6"', water: '0.5 inch per week', waterDetails: 'Drought tolerant; water when top inch of soil is dry', sunlight: 'Full sun' },
-    { name: 'Cherry Tomato', density: 0.5, category: 'Vegetable', spacing: '16-18"', water: '1-2 inches per week', waterDetails: 'Deep watering 2-3 times weekly', sunlight: 'Full sun' }
-  ];
-
-/**
- * Props for the vegetable card component
- */
-interface VegetableCardProps {
-  vegetable: Vegetable;
-  isSelected: boolean;
-  onSelect: (vegetable: Vegetable) => void;
-}
-
-/**
- * Component to display a single vegetable card
- */
-const VegetableCard: React.FC<VegetableCardProps> = ({ 
-  vegetable, 
-  isSelected, 
-  onSelect 
-}): React.ReactElement => {
-  
-  // Get density category class
-  const getDensityCategoryClass = (density: number): string => {
-    if (density <= 0.25) return "density-very-low";
-    if (density <= 0.5) return "density-low";
-    if (density <= 1) return "density-medium";
-    if (density <= 4) return "density-high";
-    if (density <= 9) return "density-very-high";
-    return "density-ultra-high";
-  };
-  
-  // Get density category text
-  const getDensityCategory = (density: number): string => {
-    if (density <= 0.25) return "Very Low";
-    if (density <= 0.5) return "Low";
-    if (density <= 1) return "Medium";
-    if (density <= 4) return "High";
-    if (density <= 9) return "Very High";
-    return "Ultra High";
-  };
-
-  return (
-    <div 
-      onClick={() => onSelect(vegetable)}
-      className={`vegetable-card ${getDensityCategoryClass(vegetable.density)} ${isSelected ? 'vegetable-card-selected' : ''}`}
-    >
-      <h3 className="vegetable-title">{vegetable.name}</h3>
-      <div className="vegetable-details">
-        <div className="density-info">
-          <span><strong>Density:</strong> {vegetable.density}</span>
-          <span className={`density-tag ${isSelected ? 'density-tag-selected' : ''}`}>
-            {getDensityCategory(vegetable.density)}
-          </span>
-        </div>
-        <p className="spacing-info"><strong>Spacing:</strong> {vegetable.spacing}</p>
-        <p className="water-info"><strong>Water:</strong> {vegetable.water}</p>
-        {isSelected && (
-          <div className="expanded-info">
-            <p><strong>Category:</strong> {vegetable.category}</p>
-            <p><strong>Sunlight:</strong> {vegetable.sunlight}</p>
-            <p className="watering-details"><strong>Watering:</strong> {vegetable.waterDetails}</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
 
 /**
  * Main Garden Toolkit component
@@ -134,8 +14,8 @@ const GardenToolkit: React.FC = (): React.ReactElement => {
   // State for the collapsible panel
   const [isOpen, setIsOpen] = useState<boolean>(false); // Default to closed to save space
   
-  // State for the selected vegetable
-  const [selectedVegetable, setSelectedVegetable] = useState<Vegetable | null>(null);
+  // State for the selected plant
+  const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
   
   // State for category filter
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
@@ -143,30 +23,54 @@ const GardenToolkit: React.FC = (): React.ReactElement => {
   // State for search term
   const [searchTerm, setSearchTerm] = useState<string>('');
   
-  // Filter vegetables based on category and search term
-  const filteredVegetables = vegetables.filter(veg => {
-    const matchesCategory = categoryFilter === 'All' || veg.category === categoryFilter;
-    const matchesSearch = veg.name.toLowerCase().includes(searchTerm.toLowerCase());
+  // State for processed plants
+  const [plants, setPlants] = useState<Plant[]>([]);
+  
+  // Query to fetch plants from database
+  const { loading, error, data } = useQuery(GET_ALL_PLANTS);
+  
+  // Process plants data when it's loaded
+  useEffect(() => {
+    if (data && data.plants) {
+      const processedPlants = data.plants.map((plant: PlantData) => ({
+        id: plant._id,
+        name: plant.plantName,
+        density: plant.plantsPerSquareFoot,
+        category: plant.plantType,
+        spacing: formatSpacing(plant.spacing),
+        water: formatWater(plant.plantWatering),
+        waterDetails: plant.plantWatering,
+        sunlight: plant.plantLight,
+        image: plant.plantImage
+      }));
+      setPlants(processedPlants);
+    }
+  }, [data]);
+  
+  // Filter plants based on category and search term
+  const filteredPlants = plants.filter(plant => {
+    const matchesCategory = categoryFilter === 'All' || plant.category === categoryFilter;
+    const matchesSearch = plant.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
   
-  // Sort vegetables by name
-  const sortedVegetables = [...filteredVegetables].sort((a, b) => 
+  // Sort plants by name
+  const sortedPlants = [...filteredPlants].sort((a, b) => 
     a.name.localeCompare(b.name)
   );
   
-  // Get unique categories from vegetables
-  const categories = ['All', ...new Set(vegetables.map(veg => veg.category))];
+  // Get unique categories from plants
+  const categories = ['All', ...new Set(plants.map(plant => plant.category))];
   
   // Toggle the open/closed state
   const toggleOpen = (): void => {
     setIsOpen(!isOpen);
   };
   
-  // Handle vegetable selection
-  const handleSelect = (vegetable: Vegetable): void => {
-    setSelectedVegetable(
-      selectedVegetable?.name === vegetable.name ? null : vegetable
+  // Handle plant selection
+  const handleSelect = (plant: Plant): void => {
+    setSelectedPlant(
+      selectedPlant?.id === plant.id ? null : plant
     );
   };
   
@@ -182,6 +86,10 @@ const GardenToolkit: React.FC = (): React.ReactElement => {
       
       {isOpen && (
         <div className="toolkit-content">
+          {/* Loading and error states */}
+          {loading && <p className="loading-message">Loading plants...</p>}
+          {error && <p className="error-message">Error loading plants: {error.message}</p>}
+          
           {/* Search input */}
           <div className="toolkit-search-container">
             <input
@@ -208,7 +116,7 @@ const GardenToolkit: React.FC = (): React.ReactElement => {
           </div>
           
           {/* Plants heading with count */}
-          <h3 className="plants-heading">Plants ({sortedVegetables.length})</h3>
+          <h3 className="plants-heading">Plants ({sortedPlants.length})</h3>
           <p className="plants-instructions">Click for details</p>
           
           {/* Density legend */}
@@ -224,16 +132,16 @@ const GardenToolkit: React.FC = (): React.ReactElement => {
             </div>
           </div>
           
-          {sortedVegetables.length === 0 ? (
+          {sortedPlants.length === 0 && !loading ? (
             <p className="no-results">No plants match your search or filter</p>
           ) : (
-            <div className="vegetable-grid">
-              {/* Vegetable cards */}
-              {sortedVegetables.map((vegetable: Vegetable): React.ReactElement => (
-                <VegetableCard 
-                  key={vegetable.name}
-                  vegetable={vegetable}
-                  isSelected={selectedVegetable?.name === vegetable.name}
+            <div className="plant-grid">
+              {/* Plant cards */}
+              {sortedPlants.map((plant: Plant): React.ReactElement => (
+                <PlantCard 
+                  key={plant.id}
+                  plant={plant}
+                  isSelected={selectedPlant?.id === plant.id}
                   onSelect={handleSelect}
                 />
               ))}
