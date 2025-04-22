@@ -76,14 +76,7 @@ You may test out the application by clicking on the deployed link above. Then pr
 
 For additional questions, reach out to the team:
 
-- GitHub: [KyBrMar12](https://github.com/KyBrMar12)
-- Email: KyBrMar@gmail.com
-
 - GitHub: [TanyaH-create](https://github.com/TanyaH-create)
 - Email: dougtanyah@gmail.com
 
-- GitHub: [Daniellewoessner](https://github.com/Daniellewoessner)
-- Email: woessnerdanielle@gmail.com
 
-- GitHub: [M-Dearlove](https://github.com/M-Dearlove)
-- Email: dearlove.matthew@gmail.com
