@@ -4,7 +4,7 @@ import './styles/index.css'
 import App from './App'
 import MainPage from './pages/MainPage.tsx'
 import ErrorPage from './pages/ErrorPage.tsx';
-import GardenPlanner from './pages/GardenPlannerPage.tsx'
+import GardenPlannerPage from './pages/GardenPlannerPage.tsx'
 import ProfilePage from './pages/ProfilePage.tsx'
 import AdminPage from './pages/AdminPage.tsx'
 
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     }, 
     {
       path: '/garden-planner',
-      element: <GardenPlanner />
+      element: <GardenPlannerPage />
     },
     {
       path: '/profile',

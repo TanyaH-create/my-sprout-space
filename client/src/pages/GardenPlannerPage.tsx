@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import { SAVE_GARDEN_MUTATION } from '../graphQL/mutations';
@@ -14,6 +14,7 @@ import PlantCarePanel from '../components/PlantCarePanel';
 import SaveGardenDialog from '../components/SaveGardenDialog';
 import PlotSizeSelector from '../components/PlotSizeSelector';
 import { Plant, DBPlant, PlotSize } from '../types/garden';
+import { resolveImagePath } from '../utils/imageUtils';
 
 // Calculate plants per square foot based on spacing
 const calculatePlantsPerSquareFoot = (spacing: number): number => {
@@ -36,13 +37,14 @@ const convertDbPlantToLocalPlant = (dbPlant: DBPlant): Plant => {
     sunlight: dbPlant.plantLight,
     water: dbPlant.plantWatering,
     plantsPerSquareFoot: dbPlant.plantsPerSquareFoot,
-    image: dbPlant.plantImage
+    // image: dbPlant.plantImage
+    image: resolveImagePath(dbPlant.plantImage)
   };
 };
 
 const GardenPlannerPage: React.FC = () => {
-  // Available plot sizes
-  const plotSizes: PlotSize[] = [
+  // Available plot sizes - useMemo aded to prevent recreation on every render
+  const plotSizes = useMemo<PlotSize[]>(() => [
     { id: 'xxxs', name: 'Extra Extra Extra Small (1 x 1)', rows: 1, cols: 1 },
     { id: 'xxs', name: 'Extra Extra Small (2 x 2)', rows: 2, cols: 2 },
     { id: 'xs1', name: 'Extra Small (3 x 3)', rows: 3, cols: 3 },
@@ -50,7 +52,7 @@ const GardenPlannerPage: React.FC = () => {
     { id: 'small', name: 'Small (6 x 6)', rows: 6, cols: 6 },
     { id: 'medium', name: 'Medium (10 x 10)', rows: 10, cols: 10 },
     { id: 'large', name: 'Large (12 x 12)', rows: 12, cols: 12 },
-  ];
+  ], []);;
 
   // State
   const [selectedPlotSize, setSelectedPlotSize] = useState<PlotSize>(plotSizes[1]); // Default to xxs

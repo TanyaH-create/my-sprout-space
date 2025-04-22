@@ -64,7 +64,7 @@ export async function getPlantPestInformation(plantName: string): Promise<PestIn
     `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4-turbo", // or whichever model you're currently using
+      model: "gpt-3.5-turbo", // or whichever model you're currently using
       messages: [
         {
           role: "system",
