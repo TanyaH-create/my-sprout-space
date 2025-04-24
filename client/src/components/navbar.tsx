@@ -97,7 +97,7 @@ export default function NavBar() {
                             {/* Logo and brand */}
                             <div className="brand-container">
                                 <div className="brand">
-                                    <span className="brand-name">Sprout Space</span>
+                                    <span className="brand-name">My Garden Planner</span>
                                 </div>
 
                                 {/* Desktop navigation */}

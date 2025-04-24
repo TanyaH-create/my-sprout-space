@@ -2,6 +2,7 @@ import React from 'react';
 import { Plant } from '../types/garden';
 import { resolveImagePath, handleImageError } from '../utils/imageUtils';
 
+
 interface PlantPaletteProps {
   plants: Plant[];
   selectedPlant: Plant | null;
@@ -14,11 +15,13 @@ export const PlantPalette: React.FC<PlantPaletteProps> = ({
   onPlantSelect
 }) => {
   return (
+  <div>
     <div className="plant-items" style={{
       display: 'flex',
       flexWrap: 'wrap',
       gap: '10px'
     }}>
+
       {plants.map((plant) => (
         <div
           key={plant.id}
@@ -58,6 +61,7 @@ export const PlantPalette: React.FC<PlantPaletteProps> = ({
         </div>
       ))}
     </div>
+  </div>
   );
 };
 

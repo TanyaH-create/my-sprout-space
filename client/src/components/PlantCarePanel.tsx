@@ -54,6 +54,7 @@ export default function PlantCarePanel({ plantName }: Props) {
 
   return (
     <div className="plant-care-panel">
+      <h2>Plant Care</h2>
       <h2 className="panel-title">
         {plantName ? `How to Grow ${plantName}` : 'Select a Plant'}
       </h2>

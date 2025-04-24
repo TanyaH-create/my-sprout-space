@@ -62,8 +62,8 @@ export interface Plant {
 
 // Plot Size Interface
 export interface PlotSize {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
   rows: number;
   cols: number;
 }

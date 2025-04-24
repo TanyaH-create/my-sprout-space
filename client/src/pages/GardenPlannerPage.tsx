@@ -1,5 +1,5 @@
 //GardenPlannerPage.tsx
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation } from '@apollo/client';
 import { SAVE_GARDEN_MUTATION } from '../graphQL/mutations';
@@ -10,12 +10,12 @@ import GardenToolkit from '../components/gardentoolkit';
 import PlantSearch from '../components/PlantSearch';
 import PlantPalette from '../components/PlantPalette';
 import GardenGrid from '../components/GardenGrid';
-import PlantLegend from '../components/PlantLegend';
 import PlantCarePanel from '../components/PlantCarePanel';
 import SaveGardenDialog from '../components/SaveGardenDialog';
 import PlotSizeSelector from '../components/PlotSizeSelector';
 import { Plant, DBPlant, PlotSize } from '../types/garden';
 import { resolveImagePath } from '../utils/imageUtils';
+
 
 // Calculate plants per square foot based on spacing
 const calculatePlantsPerSquareFoot = (spacing: number): number => {
@@ -44,19 +44,14 @@ const convertDbPlantToLocalPlant = (dbPlant: DBPlant): Plant => {
 };
 
 const GardenPlannerPage: React.FC = () => {
-  // Available plot sizes - useMemo aded to prevent recreation on every render
-  const plotSizes = useMemo<PlotSize[]>(() => [
-    { id: 'xxxs', name: 'Extra Extra Extra Small (1 x 1)', rows: 1, cols: 1 },
-    { id: 'xxs', name: 'Extra Extra Small (2 x 2)', rows: 2, cols: 2 },
-    { id: 'xs1', name: 'Extra Small (3 x 3)', rows: 3, cols: 3 },
-    { id: 'xs2', name: 'Extra Small (4 x 4)', rows: 4, cols: 4 },
-    { id: 'small', name: 'Small (6 x 6)', rows: 6, cols: 6 },
-    { id: 'medium', name: 'Medium (10 x 10)', rows: 10, cols: 10 },
-    { id: 'large', name: 'Large (12 x 12)', rows: 12, cols: 12 },
-  ], []);;
 
   // State
-  const [selectedPlotSize, setSelectedPlotSize] = useState<PlotSize>(plotSizes[1]); // Default to xxs
+  const [selectedPlotSize, setSelectedPlotSize] = useState<PlotSize>({
+    rows: 2,
+    cols: 6,
+    id: 'custom',
+    name: 'Custom Size'
+  }); 
   const [garden, setGarden] = useState<(Plant | null)[][]>([]);
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -103,6 +98,8 @@ const GardenPlannerPage: React.FC = () => {
       );
     }
   }, [selectedPlotSize, isLoadingGarden, gardensLoaded]);
+
+
 
   // GraphQL query for searching plants
   const { error, refetch, data: searchData } = useQuery(SEARCH_PLANTS_QUERY, {
@@ -183,12 +180,21 @@ const GardenPlannerPage: React.FC = () => {
         // Set garden name
         setGardenName(gardenData.garden.name);
 
-        // Find the matching plot size or use default
-        const plotSize = plotSizes.find(
-          size => size.rows === gardenData.garden.rows && size.cols === gardenData.garden.cols
-        ) || plotSizes[1];
+        // // Find the matching plot size or use default
+        // const plotSize = plotSizes.find(
+        //   size => size.rows === gardenData.garden.rows && size.cols === gardenData.garden.cols
+        // ) || plotSizes[1];
 
-        setSelectedPlotSize(plotSize);
+        // UPDATED: Create plot size object from garden data
+        const loadedPlotSize: PlotSize = {
+          rows: gardenData.garden.rows,
+          cols: gardenData.garden.cols,
+          id: 'custom',
+          name: `Custom (${gardenData.garden.rows}x${gardenData.garden.cols})`
+        };
+
+        // setSelectedPlotSize(plotSize);
+        setSelectedPlotSize(loadedPlotSize)
 
         // Create new empty garden grid with the correct dimensions
         const newGarden = Array(gardenData.garden.rows)
@@ -279,7 +285,7 @@ const GardenPlannerPage: React.FC = () => {
       setIsLoadingGarden(false);
       setGardensLoaded(false);
     }
-  }, [gardenData, gardenLoading, gardenId, plantTypes, plotSizes, gardensLoaded]);
+  }, [gardenData, gardenLoading, gardenId, plantTypes, gardensLoaded]);
 
   // GraphQL mutation for saving gardens
   const [saveGarden, { loading: saveLoading }] = useMutation(SAVE_GARDEN_MUTATION, {
@@ -386,10 +392,46 @@ const GardenPlannerPage: React.FC = () => {
   };
 
   // Change plot size
-  const handlePlotSizeChange = (plotSizeId: string): void => {
-    const newPlotSize = plotSizes.find(size => size.id === plotSizeId);
-    if (newPlotSize) {
-      setSelectedPlotSize(newPlotSize);
+  // UPDATED: Handle plot size change
+  const handlePlotSizeChange = (newSize: {rows: number, cols: number}): void => {
+    // Check if garden has plants before resizing
+    const hasPlants = garden.some(row => row.some(cell => cell !== null));
+    
+    if (hasPlants && gardensLoaded) {
+      if (window.confirm("Changing the garden size will clear your current layout. Continue?")) {
+        // User confirmed, proceed with resize
+        const updatedPlotSize = {
+          rows: newSize.rows,
+          cols: newSize.cols,
+          id: 'custom',
+          name: `Custom (${newSize.rows}x${newSize.cols})`
+        };
+        
+        setSelectedPlotSize(updatedPlotSize);
+        
+        // Reset garden with new dimensions
+        setGarden(
+          Array(newSize.rows).fill(null).map(() => Array(newSize.cols).fill(null))
+        );
+      }
+      // If user cancels, do nothing and keep current size
+    } else {
+      // No plants or garden not yet loaded, safe to resize
+      const updatedPlotSize = {
+        rows: newSize.rows,
+        cols: newSize.cols,
+        id: 'custom',
+        name: `Custom (${newSize.rows}x${newSize.cols})`
+      };
+      
+      setSelectedPlotSize(updatedPlotSize);
+      
+      if (!isLoadingGarden) {
+        // Only reset garden if we're not in the process of loading one
+        setGarden(
+          Array(newSize.rows).fill(null).map(() => Array(newSize.cols).fill(null))
+        );
+      }
     }
   };
 
@@ -490,8 +532,9 @@ const GardenPlannerPage: React.FC = () => {
 
   return (
     <div className="garden-planner">
-      <h1>Square Foot Garden Planner</h1>
-      <p className="intro-text">Plan your garden using 1×1 foot squares. Each square can hold different numbers of plants based on spacing requirements.</p>
+      <h1>My Garden Planner</h1>
+      <p className="intro-text">Start by defining your plot size and naming your garden plot. Select plants from the plant library below. Each card in the library shows how many of that type of plant can be planted in each square.</p>
+    
       
       {/* Garden Toolkit */}
       <div className="garden-layout">
@@ -506,53 +549,67 @@ const GardenPlannerPage: React.FC = () => {
 
       <div className="garden-layout">
         <div className="garden-controls">
+
           {/* Controls Row */}
-          <div className="controls-row">
-            {/* Plant Search component */}
-            <PlantSearch 
-              searchTerm={searchTerm}
-              isSearching={isSearching}
-              handleSearchChange={handleSearchChange}
-              handleSearchSubmit={handleSearchSubmit}
-              searchResults={searchResults}
-              searchError={searchError}
-              addPlantToPalette={addPlantToPalette}
-            />
-            
-            {/* Plot Size Selector */}
-            <PlotSizeSelector 
-              plotSizes={plotSizes}
-              selectedPlotSize={selectedPlotSize}
-              handlePlotSizeChange={handlePlotSizeChange}
-            />
-            
-            {/* Garden name input */}
-            <div className="garden-name-input">
-              <input
-                type="text"
-                placeholder="Garden Name"
-                value={gardenName}
-                onChange={handleGardenNameChange}
-                className="garden-name-field"
-              />
+          <div className="controls-section">
+            {/* Garden setup section - side by side and centered */}
+            <div className="garden-setup-container">
+              <div className="garden-setup-section">
+                  {/* Plot Size Selector */}
+                  <div className="setup-item">
+                    <PlotSizeSelector 
+                        selectedPlotSize={selectedPlotSize}
+                        handlePlotSizeChange={handlePlotSizeChange}
+                    />
+                  </div>
+        
+                  {/* Garden name input */}
+                  <div className="garden-name-input">
+                    <h3 className="section-title">Name Your Garden</h3>
+                    <input
+                      type="text"
+                      placeholder="Garden Name"
+                      value={gardenName}
+                      onChange={handleGardenNameChange}
+                      className="garden-name-field"
+                    />
+                  </div>
+              </div>
             </div>
             
             {/* Action Buttons */}
-            <button className="save-button" onClick={handleOpenSaveDialog} disabled={saveLoading}>
-              {saveLoading ? "Saving..." : "Save Garden"}
-            </button>
+            <div className="garden-planner-actions">
             
-            <button className="clear-button" onClick={handleClearGarden}>
-              Clear Garden
-            </button>
+              <button className="clear-button" onClick={handleClearGarden}>
+                Clear Garden
+              </button>
+
+              <button className="save-button" onClick={handleOpenSaveDialog} disabled={saveLoading}>
+                {saveLoading ? "Saving..." : "Save Garden"}
+              </button>
             
-            <button className="print-button" onClick={handlePrintGarden}>
-              Print Garden Plan
-            </button>
+              <button className="print-button" onClick={handlePrintGarden}>
+                Print Garden Plan
+              </button>
+
+            </div>
           </div>
 
-          {/* Selected Plant Info */}
-          {selectedPlant && (
+
+
+          {/* Garden Grid */}
+          <GardenGrid 
+            garden={garden}
+            selectedPlotSize={selectedPlotSize}
+            gardenName={gardenName}
+            handleCellClick={handleCellClick}
+            handleRemovePlant={handleRemovePlant}
+          />
+
+          {/* Plant Selection */}
+          <div className="plant-selection-bottom">
+           {/* Selected Plant Info */}
+           {selectedPlant && (
             <div className="selected-plant-info">
               <div className="selected-plant-header">
                 <div className="selected-plant-image">
@@ -567,41 +624,42 @@ const GardenPlannerPage: React.FC = () => {
                 <span>Water: {selectedPlant.water}</span>
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Garden Grid */}
-        <GardenGrid 
-          garden={garden}
-          selectedPlotSize={selectedPlotSize}
-          gardenName={gardenName}
-          handleCellClick={handleCellClick}
-          handleRemovePlant={handleRemovePlant}
-        />
-
-        {/* Plant Selection */}
-        <div className="plant-selection-bottom">
-          {/* Plant Palette */}
-          <PlantPalette 
-            plants={filteredPlants}
-            selectedPlant={selectedPlant}
-            onPlantSelect={handlePlantSelect}
-          />
-
-          {/* Plant Legend */}
-          <div className="legend">
-            <h3>Legend</h3>
-            <PlantLegend 
-              garden={garden}
-              plantTypes={plantTypes}
-            />
-            
-            <div className="plantcare-container">
-              <PlantCarePanel plantName={selectedPlant?.name || ''} />
-            </div>
+            )}
           </div>
-        </div>
-      </div>
+          <div className='plant-library-section'>
+             {/* Plant Search component - positioned at the top */}
+            <h2>Plant Library</h2>
+            <PlantSearch 
+              searchTerm={searchTerm}
+              isSearching={isSearching}
+              handleSearchChange={handleSearchChange}
+              handleSearchSubmit={handleSearchSubmit}
+              searchResults={searchResults}
+              searchError={searchError}
+              addPlantToPalette={addPlantToPalette}
+            />
+            {/* Plant Palette */}
+            <PlantPalette 
+              plants={filteredPlants}
+              selectedPlant={selectedPlant}
+              onPlantSelect={handlePlantSelect}
+            />
+
+            {/* Plant Legend */}
+             <div className="legend">
+              {/* <h3>Legend</h3> */}
+              {/* <PlantLegend 
+                garden={garden}
+                plantTypes={plantTypes}
+              /> */}
+            
+             <div className="plantcare-container">
+                <PlantCarePanel plantName={selectedPlant?.name || ''} />
+             </div>
+            </div> {/*legend*/}
+          </div> {/*plant=library-sections*/}
+        </div> {/*garden-controls */}
+      </div> {/*garden-layouts*/}
 
       {/* Save Garden Dialog */}
       {showSaveDialog && (
@@ -691,7 +749,7 @@ const GardenPlannerPage: React.FC = () => {
             max-width: none !important;
             margin: 0 auto;
             display: grid;
-            gap: 4px;
+            gap: 0px;
             background-color: #f0f0f0 !important;
             padding: 4px;
           }

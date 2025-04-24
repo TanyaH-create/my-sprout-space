@@ -27,7 +27,7 @@ export const GardenGrid: React.FC<GardenGridProps> = ({
           className="garden-grid"
           data-cols={selectedPlotSize.cols}
           style={{
-            gridTemplateColumns: `repeat(${selectedPlotSize.cols}, 1fr)`,
+            gridTemplateColumns: `repeat(${selectedPlotSize.cols}, 1fr)`, 
             gridTemplateRows: `repeat(${selectedPlotSize.rows}, 1fr)`
           }}
         >

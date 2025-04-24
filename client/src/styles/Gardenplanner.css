@@ -48,6 +48,8 @@
 
 .search-form {
   display: flex;
+  position: relative;
+  gap: 8px;
 }
 
 .search-input {
@@ -63,10 +65,11 @@
 
 .search-button {
   padding: 8px 15px;
+  width: 100px;
   background-color: var(--brand-accent-dark);
-  color: var(--brand-text);
+  color: var(--brand-secondary);
   border: none;
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
   cursor: pointer;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -79,6 +82,23 @@
   background-color: #cccccc;
   cursor: not-allowed;
 }
+
+.clear-search-button {
+  padding: 8px 15px;
+  width: 100px;
+  background-color: var(--brand-accent-dark);
+  color: var(--brand-secondary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.clear-search-button:hover {
+  background-color: #e6e6e6;
+}
+
+
 
 .search-results {
   margin-top: 10px;
@@ -147,31 +167,121 @@
   color: #d8000c;
 }
 
-/* Update Plot Size Selector to white */
-.plot-size-select {
-  padding: 8px;
-  border: 1px solid #ccc;
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+
+.garden-setup-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  /* align-items: flex-start; */
+  align-items: center;
+  gap: 30px;
+  max-width: 800px;
+  background-color: var(--brand-secondary);
+  padding: 12px;
+  margin: 15px auto;
   border-radius: 8px;
+  box-shadow: 0px 4px 8px  rgba(0, 0, 0, 0.1);
+  position: relative;
+}  
+
+.garden-setup-section::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background-color: var(--brand-accent);
+  border-radius: 12px;
+  z-index: -1;
+}
+
+.setup-item {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+}
+
+
+.garden-planner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+
+/*Garden size inputs*/
+.input-group {
+  display: flex;
+  flex-direction: center;
+   /* Set a consistent minimum width */
+  /* margin-bottom: 8px; */
+  gap: 8px;
+}
+
+.input-group label {
+  /* display: block;
+  margin-bottom: 5px; */
+  white-space: nowrap;
+}
+
+.plot-size-input {
+  width: 60px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center; /* Optional: centers the numbers in the input */
+}
+
+.plot-size-selector, .garden-name-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100px;
+  justify-content: flex-start;
+}
+
+.plot-size-inputs-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+
+.section-title {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: normal;
+color: var(--brand-text)
+}
+
+
+.garden-name-field {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
   font-size: 14px;
-  background-color: white; /* Changed from #f0eded to white */
-  color: var(--brand-text);
-  cursor: pointer;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
 }
-
-.plot-size-select:focus {
-  border-color: var(--brand-accent-dark);
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--brand-accent-dark-rgb, 0, 100, 0), 0.2);
-}
-
-/* Optional: Match other selectors for consistency */
-.garden-name-field, .load-garden-select {
-  background-color: white;
-}
-
 /* Control Buttons */
-.clear-button, .print-button {
+.garden-planner-actions button {
+  margin-right: 0px; /* add space between buttons*/
+}
+
+
+
+.clear-button, .print-button, .save-button {
   padding: 8px 15px;
   border: none;
   border-radius: 8px;
@@ -181,8 +291,14 @@
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.save-button {
+  background-color: var(--brand-secondary); /*#4CAF50;*/
+  color: var(--brand-text);
+}
+
 .clear-button {
-  background-color: var(--brand-accent-dark);
+  background-color: var(--brand-secondary);
+  color: var(--brand-text);
 }
 
 .clear-button:hover {
@@ -264,12 +380,12 @@
 
 .garden-grid {
   display: grid;
-  gap: 4px;
+  gap: 0px;
   background-color: var(--brand-accent);
-  padding: 4px;
+  padding: 12px;
   width: 100%;
   max-width: 1000px;
-  border-radius: 8px;
+  border-radius: 2px;
   margin: 0 auto;
 }
 
@@ -301,7 +417,7 @@
   min-width: 0;
   min-height: 0;
   box-sizing: border-box;
-  border-radius: 8px;
+  border-radius: 2px;
 }
 
 .grid-cell:hover {
@@ -604,14 +720,7 @@
     margin-right: 10px;
   }
   
-  .save-button {
-    padding: 8px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+
   
   .save-button:disabled {
     background-color: #a5d6a7;

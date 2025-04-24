@@ -13,16 +13,26 @@ export interface PlantSearchProps {
 
 const PlantSearch: React.FC<PlantSearchProps> = ({
   searchTerm,
-  isSearching,
+  // isSearching,
   searchResults,
   searchError,
   handleSearchChange,
   handleSearchSubmit,
   addPlantToPalette
 }) => {
+   // Add a clear search function that clears the search input
+   const handleClearSearch = () => {
+    // Create a synthetic event to pass to handleSearchChange
+    const event = {
+      target: { value: '' },
+      preventDefault: () => {}
+    } as React.ChangeEvent<HTMLInputElement>;
+    
+    handleSearchChange(event);
+  };
   return (
     <div className="search-container">
-      <form onSubmit={handleSearchSubmit} className="search-form">
+        <form onSubmit={handleSearchSubmit} className="search-form">
         <input
           type="text"
           placeholder="Search plants..."
@@ -30,13 +40,20 @@ const PlantSearch: React.FC<PlantSearchProps> = ({
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <button
+        {/* <button
           type="submit"
           className="search-button"
           disabled={isSearching}
         >
           {isSearching ? "..." : "Search"}
-        </button>
+        </button> */}
+        <button
+            type="button"
+            className="clear-search-button"
+            onClick={handleClearSearch}
+          >
+            Clear
+          </button>
       </form>
 
       {/* Search Results */}
