@@ -6,7 +6,7 @@ import { SAVE_GARDEN_MUTATION } from '../graphQL/mutations';
 import { SEARCH_PLANTS_QUERY, GET_GARDEN_BY_ID, GET_ALL_PLANTS } from '../graphQL/queries';
 
 import '../styles/Gardenplanner.css';
-import GardenToolkit from '../components/gardentoolkit';
+import GardenToolkit from '../components/GardenToolkit';
 import PlantSearch from '../components/PlantSearch';
 import PlantPalette from '../components/PlantPalette';
 import GardenGrid from '../components/GardenGrid';
