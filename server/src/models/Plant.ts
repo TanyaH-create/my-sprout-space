@@ -5,7 +5,7 @@ import { Schema, model, Document } from 'mongoose';
 interface IPlant extends Document {
     plantName: string;
     plantType: string;
-    plantDescription: string;
+    plantVariety?: string;
     plantImage: string;
     plantWatering: string;
     plantLight: string;
@@ -33,14 +33,14 @@ const plantSchema = new Schema<IPlant>(
         required: true,
         trim: true,
     },
-    plantDescription: {
+    plantVariety: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantImage: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantWatering: {

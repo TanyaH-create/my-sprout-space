@@ -72,7 +72,7 @@ const typeDefs = `
     _id: ID!
     plantName: String!
     plantType: String!
-    plantDescription: String!
+    plantVariety: String
     plantImage: String!
     plantWatering: String!
     plantLight: String!
