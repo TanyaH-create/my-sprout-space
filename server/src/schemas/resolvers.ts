@@ -2,6 +2,7 @@ import { User } from '../models/index.js';
 import GardenPlan from '../models/GardenPlan.js';
 import Plant from '../models/Plant.js';
 import PlantPlacement from '../models/PlantPlacement.js';
+import { calculatePlantsPerSquareFoot } from '../utils/helpers.js';
 import { signToken, AuthenticationError } from '../utils/auth.js';
 import { getPlantCareParagraph, getPlantPestInformation } from '../utils/openai.js';
 import {
@@ -165,6 +166,7 @@ const resolvers: IResolvers = {
        throw new Error('Failed to search plants by type');
      }
    },
+  
   },
 
   Mutation: {
@@ -400,7 +402,25 @@ const resolvers: IResolvers = {
           console.error('Error deleting garden:', error);
           throw new Error(`Failed to delete garden: ${error.message}`);
         }
+      },
+      
+      
+      addPlant: async (_parent: any, plantData: any) => {
+        try {
+        // Calculate plants per square foot if not provided
+          if (!plantData.plantsPerSquareFoot) {
+            plantData.plantsPerSquareFoot = calculatePlantsPerSquareFoot(plantData.spacing);
+          }
+    
+        // Create new plant
+        const newPlant = await Plant.create(plantData);
+        return newPlant;
+        } catch (error: any) {
+        console.error('Error adding plant:', error);
+        throw new Error(`Failed to add plant: ${error.message}`);
+        }
       }
+
     }
   };
 

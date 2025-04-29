@@ -9,6 +9,7 @@ export interface PlantSearchProps {
   handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSearchSubmit: (e: React.FormEvent) => void;
   addPlantToPalette: (plant: Plant) => void;
+  renderAddPlantButton?: React.ReactNode; 
 }
 
 const PlantSearch: React.FC<PlantSearchProps> = ({
@@ -18,7 +19,8 @@ const PlantSearch: React.FC<PlantSearchProps> = ({
   searchError,
   handleSearchChange,
   handleSearchSubmit,
-  addPlantToPalette
+  addPlantToPalette,
+  renderAddPlantButton
 }) => {
    // Add a clear search function that clears the search input
    const handleClearSearch = () => {
@@ -54,6 +56,8 @@ const PlantSearch: React.FC<PlantSearchProps> = ({
           >
             Clear
           </button>
+          {renderAddPlantButton}
+      
       </form>
 
       {/* Search Results */}
