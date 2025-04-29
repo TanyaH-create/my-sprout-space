@@ -6,16 +6,16 @@ interface IPlant extends Document {
     plantName: string;
     plantType: string;
     plantVariety?: string;
-    plantImage: string;
-    plantWatering: string;
-    plantLight: string;
-    plantSoil: string;
-    plantFertilizer: string;
-    plantHumidity: string;
-    plantTemperature: string;
-    plantToxicity: string;
-    plantPests: string;
-    plantDiseases: string;
+    plantImage?: string;
+    plantWatering?: string;
+    plantLight?: string;
+    plantSoil?: string;
+    plantFertilizer?: string;
+    plantHumidity?: string;
+    plantTemperature?: string;
+    plantToxicity?: string;
+    plantPests?: string;
+    plantDiseases?: string;
     spacing: number;
     plantsPerSquareFoot: number;
     color: string;
@@ -45,47 +45,47 @@ const plantSchema = new Schema<IPlant>(
     },
     plantWatering: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantLight: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantSoil: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantFertilizer: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantHumidity: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantTemperature: {
         type: String,
-        required: true,                 
+        required: false,                 
         trim: true,
     },              
     plantToxicity: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantPests: {   
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     plantDiseases: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     // Additional fields for garden planner
@@ -101,7 +101,7 @@ const plantSchema = new Schema<IPlant>(
     },
     color: {
         type: String,
-        required: true,
+        required: false,
         default: '#4CAF50'
     }
 });

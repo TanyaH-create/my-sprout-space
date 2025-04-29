@@ -89,3 +89,48 @@ export const DELETE_GARDEN_MUTATION = gql`
     }
   }
 `;
+
+export const ADD_PLANT_MUTATION = gql`
+  mutation AddPlant(
+    $plantName: String!
+    $plantType: String!
+    $plantVariety: String
+    $plantWatering: String
+    $plantLight: String
+    $plantSoil: String
+    $plantFertilizer: String
+    $plantHumidity: String
+    $plantTemperature: String
+    $plantToxicity: String
+    $plantPests: String
+    $plantDiseases: String
+    $spacing: Int!
+    $plantsPerSquareFoot: Float
+    $color: String
+  ) {
+   addPlant(
+      plantName: $plantName
+      plantType: $plantType
+      plantVariety: $plantVariety
+      plantWatering: $plantWatering
+      plantLight: $plantLight
+      plantSoil: $plantSoil
+      plantFertilizer: $plantFertilizer
+      plantHumidity: $plantHumidity
+      plantTemperature: $plantTemperature
+      plantToxicity: $plantToxicity
+      plantPests: $plantPests
+      plantDiseases: $plantDiseases
+      spacing: $spacing
+      plantsPerSquareFoot: $plantsPerSquareFoot
+      color: $color
+    ) {
+      _id
+      plantName
+      plantType
+      plantVariety
+      spacing
+      plantsPerSquareFoot     
+    }
+  }
+`;

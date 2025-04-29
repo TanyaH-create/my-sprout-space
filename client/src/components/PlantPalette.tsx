@@ -37,7 +37,7 @@ export const PlantPalette: React.FC<PlantPaletteProps> = ({
             alignItems: 'center',
             cursor: 'pointer'
           }}
-          onClick={() => onPlantSelect({ ...plant, image: plant.image || '' })}
+          onClick={() => onPlantSelect({ ...plant, image: plant.image || '/images/sprout.png' })}
         >
           <div style={{ width: '30px', height: '30px', marginBottom: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <img
@@ -58,9 +58,23 @@ export const PlantPalette: React.FC<PlantPaletteProps> = ({
           }}>
             {plant.plantsPerSquareFoot} per sq ft
           </div>
-        </div>
+         </div>
       ))}
-    </div>
+     </div>
+
+      {/* Attribution text placed at the bottom of the plant palette area */}
+      <p style={{ 
+        fontSize: '15px', 
+        color: '#666', 
+        textAlign: 'center',
+      }}>
+        <a href="https://www.flaticon.com/free-icons/sprout" 
+           title="plant icons" 
+           style={{ textDecoration: 'none', color: '#666' }}>
+          Plant icons created by Freepik - Flaticon
+        </a>
+      </p>
+  
   </div>
   );
 };

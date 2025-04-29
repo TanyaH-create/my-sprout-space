@@ -73,19 +73,19 @@ const typeDefs = `
     plantName: String!
     plantType: String!
     plantVariety: String
-    plantImage: String!
-    plantWatering: String!
-    plantLight: String!
-    plantSoil: String!
-    plantFertilizer: String!
-    plantHumidity: String!
-    plantTemperature: String!
-    plantToxicity: String!
-    plantPests: String!
-    plantDiseases: String!
+    plantImage: String
+    plantWatering: String
+    plantLight: String
+    plantSoil: String
+    plantFertilizer: String
+    plantHumidity: String
+    plantTemperature: String
+    plantToxicity: String
+    plantPests: String
+    plantDiseases: String
     spacing: Int!
     plantsPerSquareFoot: Float!
-    color: String!
+    color: String
   }
     
   input PlantInput {
@@ -110,6 +110,24 @@ const typeDefs = `
     setUserRole(userId: ID!, role: String!): User
     deleteUser(userId: ID!): User
     updateUser(userId: ID!, userData: UserUpdateInput!): User
+    addPlant(
+    plantName: String!
+    plantType: String!
+    plantVariety: String
+    plantImage: String
+    plantWatering: String
+    plantLight: String
+    plantSoil: String
+    plantFertilizer: String
+    plantHumidity: String
+    plantTemperature: String
+    plantToxicity: String
+    plantPests: String
+    plantDiseases: String
+    spacing: Int!
+    plantsPerSquareFoot: Float
+    color: String
+  ): Plant
   }
 `;
 

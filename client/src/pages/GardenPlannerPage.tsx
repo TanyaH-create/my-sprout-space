@@ -13,6 +13,7 @@ import GardenGrid from '../components/GardenGrid';
 import PlantCarePanel from '../components/PlantCarePanel';
 import SaveGardenDialog from '../components/SaveGardenDialog';
 import PlotSizeSelector from '../components/PlotSizeSelector';
+import AddPlantForm from '../components/AddPlantForm';
 import { Plant, DBPlant, PlotSize } from '../types/garden';
 import { resolveImagePath } from '../utils/imageUtils';
 
@@ -66,6 +67,7 @@ const GardenPlannerPage: React.FC = () => {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [isLoadingGarden, setIsLoadingGarden] = useState(false);
   const [gardensLoaded, setGardensLoaded] = useState(false);
+  const [showAddPlantForm, setShowAddPlantForm] = useState(false);
   
   // Use a ref instead of state for queryAttempted to prevent infinite update loops
   const queryAttemptedRef = useRef(false);
@@ -338,6 +340,7 @@ const GardenPlannerPage: React.FC = () => {
     refetch({ searchTerm, limit: 8 });
   };
 
+
   // Add a plant from search results to the palette
   const addPlantToPalette = (plant: Plant) => {
     // Check if plant is already in the palette
@@ -352,6 +355,17 @@ const GardenPlannerPage: React.FC = () => {
     setSearchResults([]);
     setSearchTerm('');
   };
+
+  const handleAddPlantClick = () => {
+    setShowAddPlantForm(true);
+  };
+  
+  // Add this handler function
+  const handlePlantAdded = () => {
+    // This function will be called after a plant is successfully added
+    // You can add any additional actions here if needed
+  };
+
 
   // Handle selecting a plant
   const handlePlantSelect = (plant: Plant): void => {
@@ -628,26 +642,38 @@ const GardenPlannerPage: React.FC = () => {
           </div>
           <div className='plant-library-section'>
              {/* Plant Search component - positioned at the top */}
-            <h2>Plant Library</h2>
-            <PlantSearch 
-              searchTerm={searchTerm}
-              isSearching={isSearching}
-              handleSearchChange={handleSearchChange}
-              handleSearchSubmit={handleSearchSubmit}
-              searchResults={searchResults}
-              searchError={searchError}
-              addPlantToPalette={addPlantToPalette}
-            />
-            {/* Plant Palette */}
-            <PlantPalette 
-              plants={filteredPlants}
-              selectedPlant={selectedPlant}
-              onPlantSelect={handlePlantSelect}
-            />
 
-            {/* Plant Legend */}
+             <h2>Plant Library</h2>
+             <div className="plant-library-search">
+             <PlantSearch 
+                 searchTerm={searchTerm}
+                 isSearching={isSearching}
+                 handleSearchChange={handleSearchChange}
+                 handleSearchSubmit={handleSearchSubmit}
+                 searchResults={searchResults}
+                 searchError={searchError}
+                 addPlantToPalette={addPlantToPalette}
+                 renderAddPlantButton={
+                  <button 
+                      className="add-plant-button" 
+                      onClick={handleAddPlantClick}
+                      type="button"
+                  >
+                    Add Plant
+                 </button>
+                 }
+              />
+              </div>
+               {/* Plant Palette */}
+              <PlantPalette 
+                 plants={filteredPlants}
+                 selectedPlant={selectedPlant}
+                 onPlantSelect={handlePlantSelect}
+              />
+
+             {/* Plant Legend */}
              <div className="legend">
-              {/* <h3>Legend</h3> */}
+              
               {/* <PlantLegend 
                 garden={garden}
                 plantTypes={plantTypes}
@@ -672,6 +698,13 @@ const GardenPlannerPage: React.FC = () => {
           onClose={() => setShowSaveDialog(false)}
           onSave={handleSaveGarden}
           onNameChange={handleGardenNameChange}
+        />
+      )}
+
+      {showAddPlantForm && (
+        <AddPlantForm 
+           onClose={() => setShowAddPlantForm(false)}
+           onPlantAdded={handlePlantAdded}
         />
       )}
 
