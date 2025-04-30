@@ -91,7 +91,7 @@ export const GET_ALL_PLANTS = gql`
       _id
       plantName
       plantType
-      plantDescription
+      plantVariety
       plantImage
       plantWatering
       plantLight
@@ -115,7 +115,7 @@ export const GET_PLANT_BY_ID = gql`
       _id
       plantName
       plantType
-      plantDescription
+      plantVariety
       plantImage
       plantWatering
       plantLight
@@ -139,7 +139,7 @@ export const GET_PLANT_BY_NAME = gql`
       _id
       plantName
       plantType
-      plantDescription
+      plantVariety
       plantImage
       plantWatering
       plantLight

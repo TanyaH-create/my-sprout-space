@@ -6,13 +6,14 @@ import { SAVE_GARDEN_MUTATION } from '../graphQL/mutations';
 import { SEARCH_PLANTS_QUERY, GET_GARDEN_BY_ID, GET_ALL_PLANTS } from '../graphQL/queries';
 
 import '../styles/Gardenplanner.css';
-import GardenToolkit from '../components/GardenToolkit';
+// import GardenToolkit from '../components/GardenToolkit';
 import PlantSearch from '../components/PlantSearch';
 import PlantPalette from '../components/PlantPalette';
 import GardenGrid from '../components/GardenGrid';
 import PlantCarePanel from '../components/PlantCarePanel';
 import SaveGardenDialog from '../components/SaveGardenDialog';
 import PlotSizeSelector from '../components/PlotSizeSelector';
+import AddPlantForm from '../components/AddPlantForm';
 import { Plant, DBPlant, PlotSize } from '../types/garden';
 import { resolveImagePath } from '../utils/imageUtils';
 
@@ -66,6 +67,7 @@ const GardenPlannerPage: React.FC = () => {
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [isLoadingGarden, setIsLoadingGarden] = useState(false);
   const [gardensLoaded, setGardensLoaded] = useState(false);
+  const [showAddPlantForm, setShowAddPlantForm] = useState(false);
   
   // Use a ref instead of state for queryAttempted to prevent infinite update loops
   const queryAttemptedRef = useRef(false);
@@ -338,6 +340,7 @@ const GardenPlannerPage: React.FC = () => {
     refetch({ searchTerm, limit: 8 });
   };
 
+
   // Add a plant from search results to the palette
   const addPlantToPalette = (plant: Plant) => {
     // Check if plant is already in the palette
@@ -352,6 +355,17 @@ const GardenPlannerPage: React.FC = () => {
     setSearchResults([]);
     setSearchTerm('');
   };
+
+  const handleAddPlantClick = () => {
+    setShowAddPlantForm(true);
+  };
+  
+  // Add this handler function
+  const handlePlantAdded = () => {
+    // This function will be called after a plant is successfully added
+    // You can add any additional actions here if needed
+  };
+
 
   // Handle selecting a plant
   const handlePlantSelect = (plant: Plant): void => {
@@ -532,71 +546,93 @@ const GardenPlannerPage: React.FC = () => {
 
   return (
     <div className="garden-planner">
-      <h1>My Garden Planner</h1>
+      <h2>Plan Your Garden!</h2>
       <p className="intro-text">Start by defining your plot size and naming your garden plot. Select plants from the plant library below. Each card in the library shows how many of that type of plant can be planted in each square.</p>
     
       
       {/* Garden Toolkit */}
-      <div className="garden-layout">
+      {/* <div className="garden-layout">
         <GardenToolkit />
         <div className="garden-controls"></div>
-      </div>
+      </div> */}
       
       {/* Loading and error messages */}
       {plantsLoading && <div className="loading-message">Loading plants...</div>}
       {plantsError && <div className="error-message">Error loading plants: {plantsError.message}</div>}
       {saveSuccess && <div className="save-success">{saveSuccess}</div>}
-
+     
       <div className="garden-layout">
         <div className="garden-controls">
-
-          {/* Controls Row */}
+        {/* Create a flex container with two columns */}
           <div className="controls-section">
-            {/* Garden setup section - side by side and centered */}
-            <div className="garden-setup-container">
-              <div className="garden-setup-section">
-                  {/* Plot Size Selector */}
-                  <div className="setup-item">
-                    <PlotSizeSelector 
+             <div className="garden-main-container" style={{ display: 'flex', gap: '20px' }}>
+              {/* Left column for controls - all in one block */}
+               <div className="garden-left-controls" style={{ width: '270px', flexShrink: 0, overflow: 'hidden' }}>
+                  {/* Single garden setup container with all controls */}
+                  <div className="garden-setup-container">
+                      <div className="garden-setup-section" style={{ 
+                           flexDirection: 'column', 
+                           alignItems: 'center',
+                           padding: '15px',
+                           maxWidth: '100%',
+                           width: '100%',
+                           boxSizing: 'border-box'
+                      }}>
+                      {/* Plot Size Selector */}
+                      <div className="setup-item" style={{ 
+                          marginBottom: '15px', 
+                          maxWidth: '100%',
+                          width: '100%'
+                      }}>
+                     <PlotSizeSelector 
                         selectedPlotSize={selectedPlotSize}
                         handlePlotSizeChange={handlePlotSizeChange}
-                    />
-                  </div>
-        
-                  {/* Garden name input */}
-                  <div className="garden-name-input">
-                    <h3 className="section-title">Name Your Garden</h3>
-                    <input
-                      type="text"
-                      placeholder="Garden Name"
-                      value={gardenName}
-                      onChange={handleGardenNameChange}
-                      className="garden-name-field"
-                    />
-                  </div>
+                      />
+                   </div>
+              
+                   {/* Garden name input */}
+                   <div className="garden-name-input" style={{ 
+                     marginBottom: '15px',
+                     maxWidth: '100%',
+                     width: '100%'
+                   }}>
+                <h3 className="section-title">Name Your Garden</h3>
+                <input
+                  type="text"
+                  placeholder="Garden Name"
+                  value={gardenName}
+                  onChange={handleGardenNameChange}
+                  className="garden-name-field"
+                  style={{ width: '100%', boxSizing: 'border-box' }}
+                />
+              </div>
+              
+              {/* Action Buttons - stacked vertically but inside the same container */}
+              <div className="garden-planner-actions" style={{ 
+                flexDirection: 'column', 
+                gap: '10px',
+                marginTop: '10px',
+                maxWidth: '100%',
+                width: '100%'
+              }}>
+                <button className="clear-button" onClick={handleClearGarden}>
+                  Clear Garden
+                </button>
+
+                <button className="save-button" onClick={handleOpenSaveDialog} disabled={saveLoading}>
+                  {saveLoading ? "Saving..." : "Save Garden"}
+                </button>
+              
+                <button className="print-button" onClick={handlePrintGarden}>
+                  Print Garden Plan
+                </button>
               </div>
             </div>
-            
-            {/* Action Buttons */}
-            <div className="garden-planner-actions">
-            
-              <button className="clear-button" onClick={handleClearGarden}>
-                Clear Garden
-              </button>
-
-              <button className="save-button" onClick={handleOpenSaveDialog} disabled={saveLoading}>
-                {saveLoading ? "Saving..." : "Save Garden"}
-              </button>
-            
-              <button className="print-button" onClick={handlePrintGarden}>
-                Print Garden Plan
-              </button>
-
-            </div>
           </div>
+        </div>
 
-
-
+        {/* Right side with the garden grid */}
+        <div className="garden-right-content" style={{ flex: 1 }}>
           {/* Garden Grid */}
           <GardenGrid 
             garden={garden}
@@ -608,58 +644,73 @@ const GardenPlannerPage: React.FC = () => {
 
           {/* Plant Selection */}
           <div className="plant-selection-bottom">
-           {/* Selected Plant Info */}
-           {selectedPlant && (
-            <div className="selected-plant-info">
-              <div className="selected-plant-header">
-                <div className="selected-plant-image">
-                  <img src={selectedPlant.image} alt={selectedPlant.name} />
+            {/* Selected Plant Info */}
+            {selectedPlant && (
+              <div className="selected-plant-info">
+                <div className="selected-plant-header">
+                  <div className="selected-plant-image">
+                    <img src={selectedPlant.image} alt={selectedPlant.name} />
+                  </div>
+                  <h3>Selected: {selectedPlant.name}</h3>
                 </div>
-                <h3>Selected: {selectedPlant.name}</h3>
+                <div className="plant-quick-info">
+                  <span>Spacing: {selectedPlant.spacing} inches</span> |
+                  <span>Plants per square foot: {selectedPlant.plantsPerSquareFoot}</span> |
+                  <span>Sunlight: {selectedPlant.sunlight}</span> |
+                  <span>Water: {selectedPlant.water}</span>
+                </div>
               </div>
-              <div className="plant-quick-info">
-                <span>Spacing: {selectedPlant.spacing} inches</span> |
-                <span>Plants per square foot: {selectedPlant.plantsPerSquareFoot}</span> |
-                <span>Sunlight: {selectedPlant.sunlight}</span> |
-                <span>Water: {selectedPlant.water}</span>
-              </div>
-            </div>
             )}
           </div>
-          <div className='plant-library-section'>
-             {/* Plant Search component - positioned at the top */}
-            <h2>Plant Library</h2>
-            <PlantSearch 
-              searchTerm={searchTerm}
-              isSearching={isSearching}
-              handleSearchChange={handleSearchChange}
-              handleSearchSubmit={handleSearchSubmit}
-              searchResults={searchResults}
-              searchError={searchError}
-              addPlantToPalette={addPlantToPalette}
-            />
-            {/* Plant Palette */}
-            <PlantPalette 
-              plants={filteredPlants}
-              selectedPlant={selectedPlant}
-              onPlantSelect={handlePlantSelect}
-            />
+        </div>
+      </div>
+    </div>
 
-            {/* Plant Legend */}
-             <div className="legend">
-              {/* <h3>Legend</h3> */}
-              {/* <PlantLegend 
-                garden={garden}
-                plantTypes={plantTypes}
-              /> */}
-            
-             <div className="plantcare-container">
-                <PlantCarePanel plantName={selectedPlant?.name || ''} />
-             </div>
-            </div> {/*legend*/}
-          </div> {/*plant=library-sections*/}
-        </div> {/*garden-controls */}
-      </div> {/*garden-layouts*/}
+    <div className='plant-library-section'>
+      {/* Plant Search component - positioned at the top */}
+      <h2>Plant Library</h2>
+      <div className="plant-library-search">
+        <PlantSearch 
+          searchTerm={searchTerm}
+          isSearching={isSearching}
+          handleSearchChange={handleSearchChange}
+          handleSearchSubmit={handleSearchSubmit}
+          searchResults={searchResults}
+          searchError={searchError}
+          addPlantToPalette={addPlantToPalette}
+          renderAddPlantButton={
+            <button 
+              className="add-plant-button" 
+              onClick={handleAddPlantClick}
+              type="button"
+            >
+              Add Plant
+            </button>
+          }
+        />
+      </div>
+      
+      {/* Plant Palette */}
+      <PlantPalette 
+        plants={filteredPlants}
+        selectedPlant={selectedPlant}
+        onPlantSelect={handlePlantSelect}
+      />
+
+      {/* Plant Legend */}
+      <div className="legend">
+        {/* <PlantLegend 
+          garden={garden}
+          plantTypes={plantTypes}
+        /> */}
+      
+        <div className="plantcare-container">
+          <PlantCarePanel plantName={selectedPlant?.name || ''} />
+        </div>
+      </div> {/*legend*/}
+    </div> {/*plant-library-section*/}
+  </div> {/*garden-controls*/}
+</div> {/*garden-layout*/}
 
       {/* Save Garden Dialog */}
       {showSaveDialog && (
@@ -672,6 +723,13 @@ const GardenPlannerPage: React.FC = () => {
           onClose={() => setShowSaveDialog(false)}
           onSave={handleSaveGarden}
           onNameChange={handleGardenNameChange}
+        />
+      )}
+
+      {showAddPlantForm && (
+        <AddPlantForm 
+           onClose={() => setShowAddPlantForm(false)}
+           onPlantAdded={handlePlantAdded}
         />
       )}
 

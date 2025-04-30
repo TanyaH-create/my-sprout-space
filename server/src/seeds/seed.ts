@@ -8,7 +8,7 @@ const plantSeeds = [
   {
     plantName: 'Tomato',
     plantType: 'Vegetable',
-    plantDescription: 'A popular garden vegetable that produces red, juicy fruits.',
+    plantVariety: '',
     plantImage: '/images/tomato.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -26,7 +26,7 @@ const plantSeeds = [
   {
     plantName: 'Carrot',
     plantType: 'Root vegetable',
-    plantDescription: 'A root vegetable known for its orange color and sweet taste.',
+    plantVariety: '',
     plantImage: '/images/carrot.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -44,7 +44,7 @@ const plantSeeds = [
   {
     plantName: 'Lettuce',
     plantType: 'Leafy green',
-    plantDescription: 'A leafy vegetable often used in salads and sandwiches.',
+    plantVariety: '',
     plantImage: '/images/lettuce.png',
     plantWatering: 'Regular',
     plantLight: 'Partial shade',
@@ -62,7 +62,7 @@ const plantSeeds = [
   {
     plantName: 'Cucumber',
     plantType: 'Vegetable',
-    plantDescription: 'A climbing vine that produces crisp, refreshing fruits.',
+    plantVariety: '',
     plantImage: '/images/cucumber.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -80,7 +80,7 @@ const plantSeeds = [
   {
     plantName: 'Zucchini',
     plantType: 'Vegetable',
-    plantDescription: 'A summer squash with dark green skin and white flesh.',
+    plantVariety: '',
     plantImage: '/images/zucchini.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -98,7 +98,7 @@ const plantSeeds = [
   {
     plantName: 'Pumpkin',
     plantType: 'Vegetable',
-    plantDescription: 'A large, orange winter squash used for cooking and decoration.',
+    plantVariety: '',
     plantImage: '/images/pumpkin.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -116,7 +116,7 @@ const plantSeeds = [
   {
     plantName: 'Sunflower',
     plantType: 'Flower',
-    plantDescription: 'A tall annual with bright yellow flowers that follow the sun.',
+    plantVariety: '',
     plantImage: '/images/sunflower.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -134,7 +134,7 @@ const plantSeeds = [
   {
     plantName: 'Basil',
     plantType: 'Herb',
-    plantDescription: 'An aromatic herb with tender green leaves used in many cuisines.',
+    plantVariety: '',
     plantImage: '/images/basil.png',
     plantWatering: 'Moderate',
     plantLight: 'Partial shade',
@@ -150,9 +150,9 @@ const plantSeeds = [
     color: '#97c283',
   },
   {
-    plantName: 'Pepper',
+    plantName: 'Green Pepper',
     plantType: 'Vegetable',
-    plantDescription: 'A versatile vegetable that ranges from sweet to spicy varieties.',
+    plantVariety: '',
     plantImage: '/images/pepper.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -170,7 +170,7 @@ const plantSeeds = [
   {
     plantName: 'Broccoli',
     plantType: 'Vegetable',
-    plantDescription: 'A nutritious cruciferous vegetable with dense green heads.',
+    plantVariety: '',
     plantImage: '/images/broccoli.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -188,7 +188,7 @@ const plantSeeds = [
   {
     plantName: 'Cauliflower',
     plantType: 'Vegetable',
-    plantDescription: 'A cruciferous vegetable with white, compact heads.',
+    plantVariety: '',
     plantImage: '/images/cauliflower.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -206,7 +206,7 @@ const plantSeeds = [
   {
     plantName: 'Onion',
     plantType: 'Vegetable',
-    plantDescription: 'A root vegetable with layered bulbs and distinctive flavor.',
+    plantVariety: '',
     plantImage: '/images/onion.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -224,7 +224,7 @@ const plantSeeds = [
   {
     plantName: 'Garlic',
     plantType: 'Vegetable',
-    plantDescription: 'A bulbous plant with strong flavor, used in many cuisines.',
+    plantVariety: '',
     plantImage: '/images/garlic.png',
     plantWatering: 'Low',
     plantLight: 'Full sun',
@@ -242,7 +242,7 @@ const plantSeeds = [
   {
     plantName: 'Potato',
     plantType: 'Root vegetable',
-    plantDescription: 'A starchy tuber crop that grows underground.',
+    plantVariety: '',
     plantImage: '/images/potatoes.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -260,7 +260,7 @@ const plantSeeds = [
   {
     plantName: 'Sweet Potato',
     plantType: 'Root vegetable',
-    plantDescription: 'A sweet, starchy root vegetable with colorful flesh.',
+    plantVariety: '',
     plantImage: '/images/sweet-potato.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -278,7 +278,7 @@ const plantSeeds = [
   {
     plantName: 'Corn',
     plantType: 'Grain',
-    plantDescription: 'A tall cereal grain that produces ears with kernels.',
+    plantVariety: '',
     plantImage: '/images/corn.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -296,7 +296,7 @@ const plantSeeds = [
   {
     plantName: 'Turnip',
     plantType: 'Root vegetable',
-    plantDescription: 'A root vegetable with white flesh and mild flavor.',
+    plantVariety: '',
     plantImage: '/images/turnip.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -314,7 +314,7 @@ const plantSeeds = [
   {
     plantName: 'Squash',
     plantType: 'Vegetable',
-    plantDescription: 'A diverse group of vegetables with edible flesh and seeds.',
+    plantVariety: '',
     plantImage: '/images/squash.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -332,7 +332,7 @@ const plantSeeds = [
   {
     plantName: 'Mint',
     plantType: 'Herb',
-    plantDescription: 'An aromatic herb with refreshing flavor and spreading growth habit.',
+    plantVariety: '',
     plantImage: '/images/mint.png',
     plantWatering: 'Regular',
     plantLight: 'Partial shade',
@@ -350,7 +350,7 @@ const plantSeeds = [
   {
     plantName: 'Rosemary',
     plantType: 'Herb',
-    plantDescription: 'A woody, perennial herb with fragrant, needle-like leaves.',
+    plantVariety: '',
     plantImage: '/images/rosemary.png',
     plantWatering: 'Low',
     plantLight: 'Full sun',
@@ -368,7 +368,7 @@ const plantSeeds = [
   {
     plantName: 'Thyme',
     plantType: 'Herb',
-    plantDescription: 'A low-growing, woody herb with small, aromatic leaves.',
+    plantVariety: '',
     plantImage: '/images/thyme.png',
     plantWatering: 'Low',
     plantLight: 'Full sun',
@@ -386,7 +386,7 @@ const plantSeeds = [
   {
     plantName: 'Cherry Tomato',
     plantType: 'Vegetable',
-    plantDescription: 'A small, sweet variety of tomato that grows in clusters.',
+    plantVariety: '',
     plantImage: '/images/cherry-tomato.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -404,7 +404,7 @@ const plantSeeds = [
   {
     plantName: 'Asparagus',
     plantType: 'Vegetable',
-    plantDescription: 'A perennial vegetable that produces tender, edible stalks.',
+    plantVariety: '',
     plantImage: '/images/asparagus.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -422,7 +422,7 @@ const plantSeeds = [
   {
     plantName: 'Beet',
     plantType: 'Root vegetable',
-    plantDescription: 'A colorful root vegetable with edible tops.',
+    plantVariety: '',
     plantImage: '/images/beet.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -438,10 +438,10 @@ const plantSeeds = [
     color: '#8a284c',
   },
   {
-    plantName: 'Bell Pepper',
+    plantName: 'Red Pepper',
     plantType: 'Vegetable',
-    plantDescription: 'A sweet, crunchy vegetable available in various colors.',
-    plantImage: '/images/bell-pepper.png',
+    plantVariety: '',
+    plantImage: '/images/red-pepper.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
     plantSoil: 'Rich, well-draining soil',
@@ -458,7 +458,7 @@ const plantSeeds = [
   {
     plantName: 'Celery',
     plantType: 'Vegetable',
-    plantDescription: 'A crisp vegetable with long, fibrous stalks.',
+    plantVariety: '',
     plantImage: '/images/celery.png',
     plantWatering: 'Regular',
     plantLight: 'Partial shade',
@@ -477,7 +477,7 @@ const plantSeeds = [
   {
     plantName: 'Cabbage',
     plantType: 'Vegetable',
-    plantDescription: 'A leafy vegetable with tightly packed leaves forming a head.',
+    plantVariety: '',
     plantImage: '/images/cabbage.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -495,7 +495,7 @@ const plantSeeds = [
   {
     plantName: 'Eggplant',
     plantType: 'Vegetable',
-    plantDescription: 'A vegetable with glossy purple skin and spongy flesh.',
+    plantVariety: '',
     plantImage: '/images/eggplant.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -513,7 +513,7 @@ const plantSeeds = [
   {
     plantName: 'Kale',
     plantType: 'Leafy green',
-    plantDescription: 'A nutritious leafy green with curly or flat leaves.',
+    plantVariety: '',
     plantImage: '/images/kale.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -531,7 +531,7 @@ const plantSeeds = [
   {
     plantName: 'Spinach',
     plantType: 'Leafy green',
-    plantDescription: 'A nutritious leafy green with tender leaves and mild flavor.',
+    plantVariety: '',
     plantImage: '/images/spinach.png',
     plantWatering: 'Regular',
     plantLight: 'Partial shade',
@@ -549,7 +549,7 @@ const plantSeeds = [
   {
     plantName: 'Strawberry',
     plantType: 'Fruit',
-    plantDescription: 'A sweet, red fruit that grows on low-growing perennial plants.',
+    plantVariety: '',
     plantImage: '/images/strawberry.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -567,7 +567,7 @@ const plantSeeds = [
   {
     plantName: 'Blueberry',
     plantType: 'Fruit',
-    plantDescription: 'A perennial shrub that produces sweet, blue berries.',
+    plantVariety: '',
     plantImage: '/images/blueberry.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -585,7 +585,7 @@ const plantSeeds = [
   {
     plantName: 'Raspberry',
     plantType: 'Fruit',
-    plantDescription: 'A perennial bush that produces sweet, red berries on canes.',
+    plantVariety: '',
     plantImage: '/images/raspberry.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -603,7 +603,7 @@ const plantSeeds = [
   {
     plantName: 'Watermelon',
     plantType: 'Fruit',
-    plantDescription: 'A vining plant that produces large, juicy fruits with sweet red flesh.',
+    plantVariety: '',
     plantImage: '/images/watermelon.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -621,7 +621,7 @@ const plantSeeds = [
   {
     plantName: 'Cantaloupe',
     plantType: 'Fruit',
-    plantDescription: 'A vining plant that produces sweet, orange-fleshed fruits with netted skin.',
+    plantVariety: '',
     plantImage: '/images/cantaloupe.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -639,7 +639,7 @@ const plantSeeds = [
   {
     plantName: 'Radish',
     plantType: 'Root vegetable',
-    plantDescription: 'A fast-growing root vegetable with crisp, peppery flesh.',
+    plantVariety: '',
     plantImage: '/images/radish.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -657,7 +657,7 @@ const plantSeeds = [
   {
     plantName: 'Peas',
     plantType: 'Vegetable',
-    plantDescription: 'A cool-season crop that produces sweet, edible seeds in pods.',
+    plantVariety: '',
     plantImage: '/images/peas.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -675,7 +675,7 @@ const plantSeeds = [
   {
     plantName: 'Beans',
     plantType: 'Vegetable',
-    plantDescription: 'A warm-season crop that produces edible pods or seeds.',
+    plantVariety: '',
     plantImage: '/images/red-beans.png',
     plantWatering: 'Moderate',
     plantLight: 'Full sun',
@@ -693,7 +693,7 @@ const plantSeeds = [
   {
     plantName: 'Okra',
     plantType: 'Vegetable',
-    plantDescription: 'A warm-season vegetable with edible seed pods.',
+    plantVariety: '',
     plantImage: '/images/okra.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -711,7 +711,7 @@ const plantSeeds = [
   {
     plantName: 'Brussels Sprouts',
     plantType: 'Vegetable',
-    plantDescription: 'A cool-season vegetable with small, cabbage-like heads on a tall stalk.',
+    plantVariety: '',
     plantImage: '/images/brussels-sprouts.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -729,7 +729,7 @@ const plantSeeds = [
   {
     plantName: 'Artichoke',
     plantType: 'Vegetable',
-    plantDescription: 'A perennial vegetable with edible flower buds.',
+    plantVariety: '',
     plantImage: '/images/artichoke.png',
     plantWatering: 'Regular',
     plantLight: 'Full sun',
@@ -743,6 +743,42 @@ const plantSeeds = [
     spacing: 36,
     plantsPerSquareFoot: 0.25,
     color: '#606c38',
+  },
+  {
+    plantName: 'Yellow Pepper',
+    plantType: 'Vegetable',
+    plantVariety: '',
+    plantImage: '/images/yellow-pepper.png',
+    plantWatering: 'Moderate',
+    plantLight: 'Full sun',
+    plantSoil: 'Rich, well-draining soil',
+    plantFertilizer: 'Balanced fertilizer',
+    plantHumidity: 'Moderate',
+    plantTemperature: '70-85°F (21-29°C)',
+    plantToxicity: 'Non-toxic',
+    plantPests: 'Aphids, spider mites',
+    plantDiseases: 'Bacterial spot, blossom end rot',
+    spacing: 12,
+    plantsPerSquareFoot: 1,
+    color: '#c82333',
+  },
+  {
+    plantName: 'Chili Pepper',
+    plantType: 'Vegetable',
+    plantVariety: '',
+    plantImage: '/images/chili-pepper.png',
+    plantWatering: 'Moderate',
+    plantLight: 'Full sun',
+    plantSoil: 'Rich, well-draining soil',
+    plantFertilizer: 'Balanced fertilizer',
+    plantHumidity: 'Moderate',
+    plantTemperature: '70-85°F (21-29°C)',
+    plantToxicity: 'Non-toxic',
+    plantPests: 'Aphids, spider mites',
+    plantDiseases: 'Bacterial spot, blossom end rot',
+    spacing: 12,
+    plantsPerSquareFoot: 1,
+    color: '#c82333',
   }
 ];
 

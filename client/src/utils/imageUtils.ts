@@ -9,7 +9,7 @@
  */
 export const resolveImagePath = (imagePath: string | undefined): string => {
     if (!imagePath) {
-      return 'https://cdn-icons-png.flaticon.com/128/628/628324.png'; // Default fallback image
+      return '/images/sprout.png'; // Default fallback image
     }
     
     // If it's already a full URL, use it as is
@@ -45,6 +45,6 @@ export const resolveImagePath = (imagePath: string | undefined): string => {
   ): void => {
     const target = event.target as HTMLImageElement;
     console.log(`Failed to load image${plantName ? ` for ${plantName}` : ''}: ${target.src}`);
-    target.src = 'https://cdn-icons-png.flaticon.com/128/628/628324.png';
+    target.src = '/images/sprout.png';
     target.onerror = null; // Prevent infinite error loops
   };

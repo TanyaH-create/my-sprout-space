@@ -5,7 +5,7 @@ export interface PlantData {
     _id: string;
     plantName: string;
     plantType: string;
-    plantDescription: string;
+    plantVariety: string;
     plantImage: string;
     plantWatering: string;
     plantLight: string;
