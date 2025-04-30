@@ -32,7 +32,7 @@ export const PlotSizeSelector: React.FC<PlotSizeSelectorProps> = ({
   return (
     <div className="plot-size-selector">
       <h3 className="section-title">Define Your Plot Size</h3>
-      <div className="plot-size-inputs-row">
+      {/* <div className="plot-size-inputs-row"> */}
         <div className="input-group">
           <label htmlFor="plotRows">Rows:</label>
           <input
@@ -55,7 +55,7 @@ export const PlotSizeSelector: React.FC<PlotSizeSelectorProps> = ({
              className="plot-size-input"
           />
         </div>
-      </div>
+      {/* </div> plot-size-input-rows */}
       {/* <p className="size-info">
         Total area: {selectedPlotSize.rows * selectedPlotSize.cols} sq ft
       </p> */}
