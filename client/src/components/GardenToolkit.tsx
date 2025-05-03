@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_PLANTS } from '../graphQL/queries'; // Adjust path as needed
 import PlantCard from './PlantCard';
 import { Plant, PlantData } from '../types/plantTypes';
-import { formatSpacing, formatWater } from '../utils/plantHelpers';
+import { formatSpacing, formatWater } from '../utils/plantUtils';
 import '../styles/gardentoolkit.css';
 
 /**
