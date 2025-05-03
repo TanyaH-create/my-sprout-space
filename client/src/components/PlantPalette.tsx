@@ -14,6 +14,16 @@ export const PlantPalette: React.FC<PlantPaletteProps> = ({
   selectedPlant,
   onPlantSelect
 }) => {
+
+  const formatPlantDensity = (plantsPerSquareFoot: number): string => {
+    if (plantsPerSquareFoot < 1) {
+      // For plants that take more than 1 square foot
+      return `1 per 2 sq ft`;
+    }
+    // For plants that fit 1 or more per square foot
+    return `${plantsPerSquareFoot} per sq ft`;
+  };
+
   return (
   <div>
     <div className="plant-items" style={{
@@ -56,7 +66,7 @@ export const PlantPalette: React.FC<PlantPaletteProps> = ({
             borderRadius: '10px',
             marginTop: '2px'
           }}>
-            {plant.plantsPerSquareFoot} per sq ft
+            {formatPlantDensity(plant.plantsPerSquareFoot)}
           </div>
          </div>
       ))}
