@@ -77,7 +77,7 @@ export const GardenGrid: React.FC<GardenGridProps> = ({
                         fontSize: '12px',
                         fontWeight: 'bold'
                       }}>
-                        {cell.plantsPerSquareFoot}
+                        {cell.plantsPerSquareFoot < 1 ? '1' : cell.plantsPerSquareFoot}
                       </div>
                     </div>
                     <div style={{ fontSize: '11px', fontWeight: 'bold', marginTop: '4px' }}>
