@@ -8,7 +8,7 @@ import { GET_GARDEN_BY_ID, GET_ALL_PLANTS } from '../graphQL/queries';
 
 import '../styles/Gardenplanner.css';
 import { Plant, PlotSize } from '../types/garden';
-import { convertDbPlantToLocalPlant } from '../utils/plantUtils';
+import { convertDbPlantToLocalPlant, PlantGrowthType } from '../utils/plantUtils';
 import { useGardenState } from '../hooks/useGardenState';
 import { usePlantSearch } from '../hooks/usePlantSearch';
 
@@ -36,6 +36,7 @@ const GardenPlannerPage: React.FC = () => {
   const [showAddPlantForm, setShowAddPlantForm] = useState(false);
   const [isLoadingGarden, setIsLoadingGarden] = useState(false);
   const [gardensLoaded, setGardensLoaded] = useState(false);
+
   
   // Use a ref to prevent infinite update loops
   const queryAttemptedRef = useRef(false);
@@ -67,7 +68,7 @@ const GardenPlannerPage: React.FC = () => {
   });
 
   // Query to get all plants
-  const { loading: plantsLoading, error: plantsError, data: plantsData } = useQuery(GET_ALL_PLANTS, {
+  const { loading: plantsLoading, error: plantsError, data: plantsData, refetch: refetchPlants } = useQuery(GET_ALL_PLANTS, {
     onError: (error) => {
       console.error('Error loading plants:', error);
     }
@@ -153,6 +154,8 @@ const GardenPlannerPage: React.FC = () => {
                 width: 1,
                 height: 1,
                 spacing: parseInt(plant.spacing, 10) || 12,
+                growthType: plant.growthType ? plant.growthType as PlantGrowthType : PlantGrowthType.NORMAL,
+                isVerticalGrower: plant.isVerticalGrower || false,
                 plantsPerSquareFoot: parseFloat(plant.plantsPerSquareFoot) || 1,
                 sunlight: plant.sunlight || "Unknown",
                 water: plant.water || "Unknown",
@@ -179,6 +182,8 @@ const GardenPlannerPage: React.FC = () => {
               width: 1,
               height: 1,
               spacing: parseInt(plant.spacing, 10) || 12,
+              growthType: plant.growthType ? plant.growthType as PlantGrowthType : PlantGrowthType.NORMAL,
+              isVerticalGrower: plant.isVerticalGrower || false,
               plantsPerSquareFoot: parseFloat(plant.plantsPerSquareFoot) || 1,
               sunlight: plant.sunlight || "Unknown",
               water: plant.water || "Unknown",
@@ -242,8 +247,10 @@ const GardenPlannerPage: React.FC = () => {
     setShowAddPlantForm(true);
   };
   
-  const handlePlantAdded = () => {
-    // This function will be called after a plant is successfully added
+  const handlePlantAdded = (newPlant) => {
+    // Add the newly created plant to the plantTypes state
+    const convertedPlant = convertDbPlantToLocalPlant(newPlant);
+    setPlantTypes(prevPlants => [...prevPlants, convertedPlant]);
   };
 
   // Handle selecting a plant
@@ -324,6 +331,8 @@ const GardenPlannerPage: React.FC = () => {
           // Include additional plant details for database
           plantName: plant.name,
           spacing: plant.spacing,
+          growthType: plant.growthType || PlantGrowthType.NORMAL,
+          isVerticalGrower: plant.isVerticalGrower || false,
           plantsPerSquareFoot: plant.plantsPerSquareFoot,
           sunlight: plant.sunlight,
           water: plant.water,

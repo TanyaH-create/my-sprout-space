@@ -49,6 +49,8 @@ const typeDefs = `
     col: Int!
     plantName: String
     spacing: Int
+    growthType: String
+    isVerticalGrower: Boolean 
     plantsPerSquareFoot: Float
     sunlight: String
     water: String
@@ -83,6 +85,8 @@ const typeDefs = `
     plantPests: String
     plantDiseases: String
     spacing: Int!
+    growthType: String!
+    isVerticalGrower: Boolean
     plantsPerSquareFoot: Float!
   }
     
@@ -92,6 +96,8 @@ const typeDefs = `
     col: Int!
     plantName: String
     spacing: Int
+    growthType: String
+    isVerticalGrower: Boolean
     plantsPerSquareFoot: Float
     sunlight: String
     water: String
@@ -122,6 +128,8 @@ const typeDefs = `
     plantPests: String
     plantDiseases: String
     spacing: Int!
+    growthType: String!
+    isVerticalGrower: Boolean  
     plantsPerSquareFoot: Float
   ): Plant
   }

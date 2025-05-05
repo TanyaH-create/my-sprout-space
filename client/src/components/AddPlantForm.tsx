@@ -1,290 +1,425 @@
-// components/AddPlantForm.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { ADD_PLANT_MUTATION } from '../graphQL/mutations';
-import { GET_ALL_PLANTS } from '../graphQL/queries';
+import { PlantGrowthType, calculatePlantsPerSquareFoot, suggestGrowthType, formatPlantDensity } from '../utils/plantUtils';
+import PlantingDensityGrid from './PlantingDensityGrid';
 
 interface AddPlantFormProps {
   onClose: () => void;
-  onPlantAdded: () => void;
+  onPlantAdded: (newPlant: any) => void;
 }
 
+// Predefined spacing options for the dropdown
+const SPACING_OPTIONS = [
+  { value: 3, label: '3" - 16 plants per sq ft' },
+  { value: 4, label: '4" - 9 plants per sq ft' },
+  { value: 6, label: '6" - 4 plants per sq ft' },
+  { value: 8, label: '8" - 2 plants per sq ft' },
+  { value: 12, label: '12" - 1 plant per sq ft' },
+  { value: 18, label: '18" - 1 plant per 2 sq ft' },
+  { value: 24, label: '24" - 1 plant per 3 sq ft' },
+  { value: 36, label: '36" - 1 plant per 4 sq ft' },
+];
+
+const PLANT_TYPE_OPTIONS = [
+  { value: 'Vegetable', label: 'Vegetable' },
+  { value: 'Root Vegetable', label: 'Root Vegetable' },
+  { value: 'Herb', label: 'Herb' },
+  { value: 'Fruit', label: 'Fruit' },
+  { value: 'Flower', label: 'Flower' }
+];
+
+// Growth type options for the dropdown
+const GROWTH_TYPE_OPTIONS = [
+  { value: PlantGrowthType.NORMAL, label: 'Standard Growth' },
+  { value: PlantGrowthType.VERTICAL, label: 'Vertical Growth (1 per sq ft)' },
+  { value: PlantGrowthType.VERTICAL_BEAN_PEA, label: 'Vertical Bean/Pea (9 per sq ft)' },
+];
+
 const AddPlantForm: React.FC<AddPlantFormProps> = ({ onClose, onPlantAdded }) => {
-  const [formData, setFormData] = useState({
-    plantName: '',
-    plantType: '',
-    plantVariety: '',
-    plantWatering: '',
-    plantLight: '',
-    plantSoil: '',
-    plantFertilizer: '',
-    plantHumidity: '',
-    plantTemperature: '',
-    plantToxicity: '',
-    plantPests: '',
-    plantDiseases: '',
-    spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#4CAF50'
-  });
-  
+  // Form state
+  const [plantName, setPlantName] = useState('');
+  const [plantType, setPlantType] = useState('');
+  const [plantVariety, setPlantVariety] = useState('');
+  const [spacing, setSpacing] = useState<number>(12);
+  const [sunlight, setSunlight] = useState('Full Sun');
+  const [water, setWater] = useState('');
+  const [growthType, setGrowthType] = useState<PlantGrowthType>(PlantGrowthType.NORMAL);
+  const [calculatedDensity, setCalculatedDensity] = useState<number>(1);
+  const [suggestedGrowthType, setSuggestedGrowthType] = useState<PlantGrowthType | null>(null);
   const [error, setError] = useState('');
   
+  // Add plant mutation
   const [addPlant, { loading }] = useMutation(ADD_PLANT_MUTATION, {
-    refetchQueries: [{ query: GET_ALL_PLANTS }],
-    onCompleted: () => {
-      onPlantAdded();
+    onCompleted: (data) => {
+      onPlantAdded(data.addPlant);
       onClose();
     },
-    onError: (err) => {
-      setError(`Error adding plant: ${err.message}`);
+    onError: (error) => {
+      setError(`Error adding plant: ${error.message}`);
     }
   });
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    
-    // Handle numeric values
-    if (type === 'number') {
-      setFormData({
-        ...formData,
-        [name]: parseFloat(value)
-      });
+  // Suggest growth type when plant name or type changes
+  useEffect(() => {
+    if (plantName && plantName.length > 2) {
+      const suggestion = suggestGrowthType(plantName, plantType);
+      setSuggestedGrowthType(suggestion);
     } else {
-      setFormData({
-        ...formData,
-        [name]: value
-      });
+      setSuggestedGrowthType(null);
+    }
+  }, [plantName, plantType]);
+  
+  // Calculate plants per square foot whenever spacing or growth type changes
+  useEffect(() => {
+    const density = calculatePlantsPerSquareFoot(spacing, growthType);
+    setCalculatedDensity(density);
+  }, [spacing, growthType]);
+  
+  // Apply suggested growth type
+  const handleApplySuggestion = () => {
+    if (suggestedGrowthType) {
+      setGrowthType(suggestedGrowthType);
     }
   };
   
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.plantName.trim()) {
+    if (!plantName.trim()) {
       setError('Plant name is required');
       return;
     }
     
-    if (!formData.plantType.trim()) {
+    if (!plantType.trim()) {
       setError('Plant type is required');
       return;
     }
     
-    // Submit to server
-    addPlant({ variables: formData });
+    addPlant({
+      variables: {
+        plantName,
+        plantType,
+        plantVariety: plantVariety || undefined,
+        spacing,
+        plantLight: sunlight,
+        plantWatering: water,
+        growthType,
+        isVerticalGrower: growthType !== PlantGrowthType.NORMAL,
+        // plantsPerSquareFoot is calculated on the server in the pre-save hook
+      }
+    });
   };
-  
+
   return (
-    <div className="add-plant-dialog-overlay">
-      <div className="add-plant-dialog">
-        <h2>Add New Plant</h2>
+    <div className="modal-overlay">
+      <div className="add-plant-form" style={{
+        maxWidth: '600px',
+        backgroundColor: 'white',
+        padding: '20px',
+        borderRadius: '8px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      }}>
+        <div className="form-header" style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          borderBottom: '1px solid #eee',
+          paddingBottom: '10px'
+        }}>
+          <h2 style={{ margin: 0 }}>Add New Plant</h2>
+          <button 
+            onClick={onClose} 
+            className="close-button"
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '24px',
+              cursor: 'pointer'
+            }}
+          >
+            ×
+          </button>
+        </div>
         
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-message" style={{
+          backgroundColor: '#f8d7da',
+          color: '#721c24',
+          padding: '10px',
+          borderRadius: '4px',
+          marginBottom: '15px'
+        }}>{error}</div>}
         
         <form onSubmit={handleSubmit}>
-          <div className="form-columns">
-            <div className="form-column">
-              <div className="form-group">
-                <label htmlFor="plantName">Plant Name*</label>
+          <div className="form-layout" style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '20px'
+          }}>
+            <div className="form-left">
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label htmlFor="plantName" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Plant Name *
+                </label>
                 <input
-                  type="text"
                   id="plantName"
-                  name="plantName"
-                  value={formData.plantName}
-                  onChange={handleChange}
+                  type="text"
+                  value={plantName}
+                  onChange={(e) => setPlantName(e.target.value)}
                   required
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px'
+                  }}
                 />
               </div>
               
-              <div className="form-group">
-                <label htmlFor="plantType">Plant Type*</label>
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label htmlFor="plantType" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Plant Type *
+                </label>
                 <select
                   id="plantType"
-                  name="plantType"
-                  value={formData.plantType}
-                  onChange={handleChange}
+                  value={plantType}
+                  onChange={(e) => setPlantType(e.target.value)}
                   required
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px'
+                   }}
                 >
-                  <option value="">Select a type</option>
-                  <option value="Vegetable">Vegetable</option>
-                  <option value="Fruit">Fruit</option>
-                  <option value="Herb">Herb</option>
-                  <option value="Flower">Flower</option>
-                  <option value="Root vegetable">Root vegetable</option>
-                  <option value="Leafy green">Leafy green</option>
-                  <option value="Grain">Grain</option>
+                  <option value="" disabled>Select a plant type</option>
+                      {PLANT_TYPE_OPTIONS.map(option => (
+                  <option key={option.value} value={option.value}>
+                      {option.label}
+                  </option>
+                  ))}
                 </select>
               </div>
               
-              <div className="form-group">
-                <label htmlFor="plantVariety">Variety (optional)</label>
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label htmlFor="plantVariety" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Variety (Optional)
+                </label>
                 <input
-                  type="text"
                   id="plantVariety"
-                  name="plantVariety"
-                  value={formData.plantVariety}
-                  onChange={handleChange}
+                  type="text"
+                  value={plantVariety}
+                  onChange={(e) => setPlantVariety(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px'
+                  }}
                 />
               </div>
               
-              <div className="form-group">
-                <label htmlFor="plantWatering">Watering Needs*</label>
+              {/* Growth Type Suggestion */}
+              {suggestedGrowthType && suggestedGrowthType !== growthType && (
+                <div className="suggestion-box" style={{
+                  backgroundColor: '#f8f9fa',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  padding: '10px',
+                  marginBottom: '15px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}>
+                  <span>
+                    <strong>Suggestion:</strong> This plant might be a 
+                    {suggestedGrowthType === PlantGrowthType.VERTICAL_BEAN_PEA 
+                      ? ' vertical bean/pea (9 per sq ft)' 
+                      : suggestedGrowthType === PlantGrowthType.VERTICAL 
+                        ? ' vertical grower (1 per sq ft)' 
+                        : ' standard plant'}
+                  </span>
+                  <button 
+                    type="button" 
+                    className="btn-apply-suggestion"
+                    style={{
+                      backgroundColor: '#4CAF50',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      padding: '5px 10px',
+                      cursor: 'pointer'
+                    }}
+                    onClick={handleApplySuggestion}
+                  >
+                    Apply
+                  </button>
+                </div>
+              )}
+              
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label htmlFor="growthType" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Growth Type
+                </label>
                 <select
-                  id="plantWatering"
-                  name="plantWatering"
-                  value={formData.plantWatering}
-                  onChange={handleChange}
+                  id="growthType"
+                  value={growthType}
+                  onChange={(e) => setGrowthType(e.target.value as PlantGrowthType)}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px'
+                  }}
                 >
-                  <option value="">Select watering needs</option>
-                  <option value="Low">Low</option>
-                  <option value="Moderate">Moderate</option>
-                  <option value="Regular">Regular</option>
-                  <option value="High">High</option>
+                  {GROWTH_TYPE_OPTIONS.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
+                <small className="form-text" style={{ color: '#666', display: 'block', marginTop: '5px' }}>
+                  This determines how the plant grows and affects planting density
+                </small>
               </div>
               
-              <div className="form-group">
-                <label htmlFor="plantLight">Light Requirements*</label>
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label htmlFor="spacing" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Spacing (from seed packet)
+                </label>
                 <select
-                  id="plantLight"
-                  name="plantLight"
-                  value={formData.plantLight}
-                  onChange={handleChange}
-                >
-                  <option value="">Select light requirements</option>
-                  <option value="Full sun">Full sun</option>
-                  <option value="Partial sun">Partial sun</option>
-                  <option value="Partial shade">Partial shade</option>
-                  <option value="Full shade">Full shade</option>
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="spacing">Spacing (inches)*</label>
-                <input
-                  type="number"
                   id="spacing"
-                  name="spacing"
-                  min="1"
-                  max="36"
-                  value={formData.spacing}
-                  onChange={handleChange}
-                  required
-                />
+                  value={spacing}
+                  onChange={(e) => setSpacing(Number(e.target.value))}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px'
+                  }}
+                >
+                  {SPACING_OPTIONS.map(option => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <small className="form-text" style={{ color: '#666', display: 'block', marginTop: '5px' }}>
+                  Standard spacing between plants in inches (from seed packet)
+                </small>
               </div>
             </div>
             
-            <div className="form-column">
-              <div className="form-group">
-                <label htmlFor="plantSoil">Soil Requirements*</label>
-                <input
-                  type="text"
-                  id="plantSoil"
-                  name="plantSoil"
-                  value={formData.plantSoil}
-                  onChange={handleChange}
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="plantFertilizer">Fertilizer Needs*</label>
-                <input
-                  type="text"
-                  id="plantFertilizer"
-                  name="plantFertilizer"
-                  value={formData.plantFertilizer}
-                  onChange={handleChange}
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="plantHumidity">Humidity Preference*</label>
+            <div className="form-right">
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label htmlFor="sunlight" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Sunlight Requirements
+                </label>
                 <select
-                  id="plantHumidity"
-                  name="plantHumidity"
-                  value={formData.plantHumidity}
-                  onChange={handleChange}
+                  id="sunlight"
+                  value={sunlight}
+                  onChange={(e) => setSunlight(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px'
+                  }}
                 >
-                  <option value="">Select humidity</option>
-                  <option value="Low">Low</option>
-                  <option value="Low to moderate">Low to moderate</option>
-                  <option value="Moderate">Moderate</option>
-                  <option value="Moderate to high">Moderate to high</option>
-                  <option value="High">High</option>
+                  <option value="Full Sun">Full Sun</option>
+                  <option value="Partial Sun">Partial Sun</option>
+                  <option value="Partial Shade">Partial Shade</option>
+                  <option value="Full Shade">Full Shade</option>
                 </select>
               </div>
               
-              <div className="form-group">
-                <label htmlFor="plantTemperature">Temperature Range*</label>
+              <div className="form-group" style={{ marginBottom: '15px' }}>
+                <label htmlFor="water" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                  Watering Requirements
+                </label>
                 <input
+                  id="water"
                   type="text"
-                  id="plantTemperature"
-                  name="plantTemperature"
-                  placeholder="e.g. 65-85°F (18-29°C)"
-                  value={formData.plantTemperature}
-                  onChange={handleChange}
+                  value={water}
+                  onChange={(e) => setWater(e.target.value)}
+                  placeholder="e.g., 1-2 inches per week"
+                  style={{
+                    width: '100%',
+                    padding: '8px',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px'
+                  }}
                 />
               </div>
               
-              <div className="form-group">
-                <label htmlFor="plantToxicity">Toxicity*</label>
-                <input
-                  type="text"
-                  id="plantToxicity"
-                  name="plantToxicity"
-                  placeholder="e.g. Non-toxic or Toxic to pets"
-                  value={formData.plantToxicity}
-                  onChange={handleChange}
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="color">Color</label>
-                <input
-                  type="color"
-                  id="color"
-                  name="color"
-                  value={formData.color}
-                  onChange={handleChange}
-                />
+              {/* Plants Per Square Foot Preview */}
+              <div className="density-preview" style={{
+                marginTop: '20px',
+                backgroundColor: '#f9f9f9',
+                padding: '15px',
+                borderRadius: '8px',
+                textAlign: 'center'
+              }}>
+                <h3 style={{ margin: '0 0 10px 0', color: '#4CAF50' }}>
+                  Planting Density Preview
+                </h3>
+                <div style={{ margin: '10px 0', fontSize: '18px', fontWeight: 'bold' }}>
+                  {formatPlantDensity(calculatedDensity)}
+                </div>
+                <div style={{ maxWidth: '200px', margin: '0 auto' }}>
+                  <PlantingDensityGrid
+                    plantsPerSquareFoot={calculatedDensity}
+                    growthType={growthType}
+                    spacing={spacing}
+                    plantName={plantName || "Plant"}
+                  />
+                </div>
+                <div style={{ marginTop: '10px', fontSize: '12px', color: '#666' }}>
+                  Based on {spacing}" spacing and {growthType === PlantGrowthType.NORMAL ? 'standard' : 'vertical'} growth
+                </div>
               </div>
             </div>
           </div>
           
-          <div className="full-width-inputs">
-            <div className="form-group">
-              <label htmlFor="plantPests">Common Pests*</label>
-              <input
-                type="text"
-                id="plantPests"
-                name="plantPests"
-                placeholder="e.g. Aphids, spider mites"
-                value={formData.plantPests}
-                onChange={handleChange}
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="plantDiseases">Common Diseases*</label>
-              <input
-                type="text"
-                id="plantDiseases"
-                name="plantDiseases"
-                placeholder="e.g. Powdery mildew, root rot"
-                value={formData.plantDiseases}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          
-          <div className="dialog-buttons">
-            <button type="button" onClick={onClose} className="cancel-button">
+          <div className="form-actions" style={{
+            marginTop: '20px',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            gap: '10px',
+            borderTop: '1px solid #eee',
+            paddingTop: '15px'
+          }}>
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="btn-cancel"
+              disabled={loading}
+              style={{
+                padding: '8px 16px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                backgroundColor: 'white',
+                cursor: 'pointer'
+              }}
+            >
               Cancel
             </button>
-            <button type="submit" className="submit-button" disabled={loading}>
-              {loading ? "Adding..." : "Add Plant"}
+            <button 
+              type="submit" 
+              className="btn-submit"
+              disabled={loading}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#4CAF50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              {loading ? 'Adding...' : 'Add Plant'}
             </button>
           </div>
         </form>

@@ -3,7 +3,9 @@ import React from 'react';
 import PlantSearch from './PlantSearch';
 import PlantPalette from './PlantPalette';
 import PlantCarePanel from './PlantCarePanel';
+import PlantDensityInfo from './PlantingDensityInfo'
 import { PlantLibrarySectionProps } from '../types/garden-components';
+
 
 const PlantLibrarySection: React.FC<PlantLibrarySectionProps> = ({
   searchTerm,
@@ -53,6 +55,7 @@ const PlantLibrarySection: React.FC<PlantLibrarySectionProps> = ({
       <div className="legend">
         <div className="plantcare-container">
           <PlantCarePanel plantName={selectedPlant?.name || ''} />
+          <PlantDensityInfo plant={selectedPlant} />
         </div>
       </div>
     </div>
