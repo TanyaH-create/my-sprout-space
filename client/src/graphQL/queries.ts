@@ -75,6 +75,8 @@ export const GET_GARDEN_BY_ID = gql`
         col
         plantName
         spacing
+        growthType
+        isVerticalGrower
         plantsPerSquareFoot
         sunlight
         water
@@ -101,6 +103,8 @@ export const GET_ALL_PLANTS = gql`
       plantPests
       plantDiseases
       spacing
+      growthType
+      isVerticalGrower     
       plantsPerSquareFoot
     }
   }
@@ -124,6 +128,8 @@ export const GET_PLANT_BY_ID = gql`
       plantPests
       plantDiseases
       spacing
+      growthType
+      isVerticalGrower
       plantsPerSquareFoot
     }
   }
@@ -140,6 +146,8 @@ export const GET_PLANT_BY_NAME = gql`
       plantWatering
       plantLight
       spacing
+      growthType
+      isVerticalGrower
       plantsPerSquareFoot
     }
   }
@@ -155,6 +163,8 @@ export const SEARCH_PLANTS_BY_TYPE = gql`
       plantWatering
       plantLight
       spacing
+      growthType
+      isVerticalGrower
       plantsPerSquareFoot
     }
   }
