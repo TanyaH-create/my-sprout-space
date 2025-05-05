@@ -97,7 +97,6 @@ const resolvers: IResolvers = {
           row: plant.row,
           col: plant.col,
           plantName: plant.plantName,
-          color: plant.color,
           spacing: plant.spacing,
           plantsPerSquareFoot: plant.plantsPerSquareFoot,
           sunlight: plant.sunlight,

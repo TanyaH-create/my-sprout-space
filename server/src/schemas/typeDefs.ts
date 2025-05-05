@@ -48,7 +48,6 @@ const typeDefs = `
     row: Int!
     col: Int!
     plantName: String
-    color: String
     spacing: Int
     plantsPerSquareFoot: Float
     sunlight: String
@@ -85,7 +84,6 @@ const typeDefs = `
     plantDiseases: String
     spacing: Int!
     plantsPerSquareFoot: Float!
-    color: String
   }
     
   input PlantInput {
@@ -93,7 +91,6 @@ const typeDefs = `
     row: Int!
     col: Int!
     plantName: String
-    color: String
     spacing: Int
     plantsPerSquareFoot: Float
     sunlight: String
@@ -126,7 +123,6 @@ const typeDefs = `
     plantDiseases: String
     spacing: Int!
     plantsPerSquareFoot: Float
-    color: String
   ): Plant
   }
 `;

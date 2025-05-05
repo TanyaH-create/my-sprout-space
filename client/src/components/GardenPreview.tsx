@@ -19,7 +19,6 @@ const GardenPreview = ({ garden }: GardenPreviewProps) => {
           grid[plant.row][plant.col] = { 
             id: plant.plantId,
             plantName: plant.plantName,
-            color: plant.color || '#4CAF50', // Default green if no color provided
             image: plant.image
           };
         }
@@ -48,7 +47,7 @@ const GardenPreview = ({ garden }: GardenPreviewProps) => {
                 key={`${rowIndex}-${colIndex}`}
                 className={`preview-cell ${hasValidImage ? 'with-image' : ''}`}
                 style={{
-                  backgroundColor: hasValidImage ? 'transparent' : (plant ? plant.color : '#f9f9f9'),
+                  backgroundColor: hasValidImage ? 'transparent' :  '#f9f9f9',
                   backgroundImage: hasValidImage ? `url(${plant.image})` : 'none',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',

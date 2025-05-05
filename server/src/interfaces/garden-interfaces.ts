@@ -5,7 +5,6 @@ export interface PlantPlacementInput {
   row: number;
   col: number;
   plantName?: string;
-  color?: string;
   spacing?: number;
   plantsPerSquareFoot?: number;
   sunlight?: string;

@@ -106,7 +106,6 @@ export const ADD_PLANT_MUTATION = gql`
     $plantDiseases: String
     $spacing: Int!
     $plantsPerSquareFoot: Float
-    $color: String
   ) {
    addPlant(
       plantName: $plantName
@@ -123,7 +122,6 @@ export const ADD_PLANT_MUTATION = gql`
       plantDiseases: $plantDiseases
       spacing: $spacing
       plantsPerSquareFoot: $plantsPerSquareFoot
-      color: $color
     ) {
       _id
       plantName

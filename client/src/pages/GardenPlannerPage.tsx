@@ -150,7 +150,6 @@ const GardenPlannerPage: React.FC = () => {
               newGarden[rowIndex][colIndex] = {
                 id: plant.plantId || "",
                 name: plant.plantName || "Unknown Plant",
-                color: plant.color || "#4CAF50",
                 width: 1,
                 height: 1,
                 spacing: parseInt(plant.spacing, 10) || 12,
@@ -177,7 +176,6 @@ const GardenPlannerPage: React.FC = () => {
             newPlants.push({
               id: plant.plantId,
               name: plant.plantName || "Unknown Plant",
-              color: plant.color || "#4CAF50",
               width: 1,
               height: 1,
               spacing: parseInt(plant.spacing, 10) || 12,
@@ -325,7 +323,6 @@ const GardenPlannerPage: React.FC = () => {
           col: colIndex,
           // Include additional plant details for database
           plantName: plant.name,
-          color: plant.color,
           spacing: plant.spacing,
           plantsPerSquareFoot: plant.plantsPerSquareFoot,
           sunlight: plant.sunlight,

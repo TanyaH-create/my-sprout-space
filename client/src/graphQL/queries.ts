@@ -55,7 +55,6 @@ export const GET_USER_GARDENS = gql`
         col
         plantId
         plantName
-        color
         image
       }
     }
@@ -75,7 +74,6 @@ export const GET_GARDEN_BY_ID = gql`
         row
         col
         plantName
-        color
         spacing
         plantsPerSquareFoot
         sunlight
@@ -104,7 +102,6 @@ export const GET_ALL_PLANTS = gql`
       plantDiseases
       spacing
       plantsPerSquareFoot
-      color
     }
   }
 `;
@@ -128,7 +125,6 @@ export const GET_PLANT_BY_ID = gql`
       plantDiseases
       spacing
       plantsPerSquareFoot
-      color
     }
   }
 `;
@@ -145,7 +141,6 @@ export const GET_PLANT_BY_NAME = gql`
       plantLight
       spacing
       plantsPerSquareFoot
-      color
     }
   }
 `;
@@ -161,7 +156,6 @@ export const SEARCH_PLANTS_BY_TYPE = gql`
       plantLight
       spacing
       plantsPerSquareFoot
-      color
     }
   }
 `;

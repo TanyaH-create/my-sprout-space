@@ -24,10 +24,12 @@ export const formatPlantDensity = (plantsPerSquareFoot: number): string => {
 
 // Convert database plant to local plant format
 export const convertDbPlantToLocalPlant = (dbPlant: DBPlant): Plant => {
-  return {
+  console.log('Raw DB plant object:', dbPlant);
+  console.log('Plant image field from DB:', dbPlant.plantImage);
+
+  const convertedPlant = {
     id: dbPlant._id,
     name: dbPlant.plantName,
-    color: dbPlant.color,
     width: 1,
     height: 1,
     spacing: dbPlant.spacing,
@@ -36,6 +38,9 @@ export const convertDbPlantToLocalPlant = (dbPlant: DBPlant): Plant => {
     plantsPerSquareFoot: dbPlant.plantsPerSquareFoot,
     image: resolveImagePath(dbPlant.plantImage)
   };
+  
+  console.log('Converted plant with resolved image:', convertedPlant);
+  return convertedPlant;
 };
 
 

@@ -18,7 +18,6 @@ interface IPlant extends Document {
     plantDiseases?: string;
     spacing: number;
     plantsPerSquareFoot: number;
-    color: string;
 }
 
 const plantSchema = new Schema<IPlant>(
@@ -98,11 +97,6 @@ const plantSchema = new Schema<IPlant>(
         type: Number,
         required: true,
         default: 1
-    },
-    color: {
-        type: String,
-        required: false,
-        default: '#4CAF50'
     }
 });
 

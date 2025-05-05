@@ -2,7 +2,6 @@
 export interface PlantInfo {
     id: string;
     plantName?: string;
-    color?: string;
     image?: string;
   }
   
@@ -12,7 +11,6 @@ export interface PlantInfo {
     col: number;
     plantId: string;
     plantName?: string;
-    color?: string;
     image?: string;
   }
   
@@ -43,14 +41,12 @@ export interface DBPlant {
   plantDiseases: string;
   spacing: number;
   plantsPerSquareFoot: number;
-  color: string;
 }
 
 // Plant Interface for use in the garden planner
 export interface Plant {
   id: string;
   name: string;
-  color: string;
   width: number;
   height: number;
   spacing: number;
