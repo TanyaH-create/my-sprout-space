@@ -37,7 +37,8 @@ const GardenMainContent: React.FC<GardenMainContentProps> = ({
               <span>Spacing: {selectedPlant.spacing} inches</span> |
               <span>Plants per square foot: {selectedPlant.plantsPerSquareFoot}</span> |
               <span>Sunlight: {selectedPlant.sunlight}</span> |
-              <span>Water: {selectedPlant.water}</span>
+              <span>Water: {selectedPlant.water}</span> |
+              <span>{(selectedPlant.isVerticalGrower) ? 'This plant grows vertically and should be provided with a trellis or other support' : '' }</span> 
             </div>
           </div>
         )}
