@@ -55,7 +55,6 @@ export const GET_USER_GARDENS = gql`
         col
         plantId
         plantName
-        color
         image
       }
     }
@@ -75,8 +74,9 @@ export const GET_GARDEN_BY_ID = gql`
         row
         col
         plantName
-        color
         spacing
+        growthType
+        isVerticalGrower
         plantsPerSquareFoot
         sunlight
         water
@@ -103,8 +103,9 @@ export const GET_ALL_PLANTS = gql`
       plantPests
       plantDiseases
       spacing
+      growthType
+      isVerticalGrower     
       plantsPerSquareFoot
-      color
     }
   }
 `;
@@ -127,8 +128,9 @@ export const GET_PLANT_BY_ID = gql`
       plantPests
       plantDiseases
       spacing
+      growthType
+      isVerticalGrower
       plantsPerSquareFoot
-      color
     }
   }
 `;
@@ -144,8 +146,9 @@ export const GET_PLANT_BY_NAME = gql`
       plantWatering
       plantLight
       spacing
+      growthType
+      isVerticalGrower
       plantsPerSquareFoot
-      color
     }
   }
 `;
@@ -160,8 +163,9 @@ export const SEARCH_PLANTS_BY_TYPE = gql`
       plantWatering
       plantLight
       spacing
+      growthType
+      isVerticalGrower
       plantsPerSquareFoot
-      color
     }
   }
 `;

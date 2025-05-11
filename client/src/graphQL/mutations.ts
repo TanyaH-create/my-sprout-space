@@ -105,8 +105,9 @@ export const ADD_PLANT_MUTATION = gql`
     $plantPests: String
     $plantDiseases: String
     $spacing: Int!
+    $growthType: String!
+    $isVerticalGrower: Boolean   
     $plantsPerSquareFoot: Float
-    $color: String
   ) {
    addPlant(
       plantName: $plantName
@@ -122,14 +123,17 @@ export const ADD_PLANT_MUTATION = gql`
       plantPests: $plantPests
       plantDiseases: $plantDiseases
       spacing: $spacing
+      growthType: $growthType
+      isVerticalGrower: $isVerticalGrower
       plantsPerSquareFoot: $plantsPerSquareFoot
-      color: $color
     ) {
       _id
       plantName
       plantType
       plantVariety
       spacing
+      growthType
+      isVerticalGrower
       plantsPerSquareFoot     
     }
   }

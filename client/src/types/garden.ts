@@ -1,8 +1,9 @@
 // Plant information interface
+import { PlantGrowthType } from '../utils/plantUtils'
+
 export interface PlantInfo {
     id: string;
     plantName?: string;
-    color?: string;
     image?: string;
   }
   
@@ -12,7 +13,6 @@ export interface PlantInfo {
     col: number;
     plantId: string;
     plantName?: string;
-    color?: string;
     image?: string;
   }
   
@@ -30,6 +30,7 @@ export interface DBPlant {
   _id: string;
   plantName: string;
   plantType: string;
+  plantVariety: string;
   plantDescription: string;
   plantImage: string;
   plantWatering: string;
@@ -42,20 +43,23 @@ export interface DBPlant {
   plantPests: string;
   plantDiseases: string;
   spacing: number;
+  growthType?: string; 
+  isVerticalGrower?: boolean; 
   plantsPerSquareFoot: number;
-  color: string;
 }
 
 // Plant Interface for use in the garden planner
 export interface Plant {
   id: string;
   name: string;
-  color: string;
+  variety: string;
   width: number;
   height: number;
   spacing: number;
   sunlight: string;
   water: string;
+  growthType?: PlantGrowthType; 
+  isVerticalGrower?: boolean; 
   plantsPerSquareFoot: number;
   image?: string;
 }

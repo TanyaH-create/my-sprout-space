@@ -5,8 +5,9 @@ export interface PlantPlacementInput {
   row: number;
   col: number;
   plantName?: string;
-  color?: string;
   spacing?: number;
+  growthType: String
+  isVerticalGrower: Boolean 
   plantsPerSquareFoot?: number;
   sunlight?: string;
   water?: string;

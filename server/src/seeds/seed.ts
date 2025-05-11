@@ -2,6 +2,12 @@ import Plant from '../models/Plant.js';
 import db from '../config/connection.js';
 import cleanDB from './cleanDB.js';
 
+// Define growth type enum values
+const PlantGrowthType = {
+  NORMAL: 'normal',
+  VERTICAL: 'vertical',
+  VERTICAL_BEAN_PEA: 'vertical_bean_pea'
+};
 
 // Plant data from the client-side plantData.ts file, adapted for the database
 const plantSeeds = [
@@ -20,8 +26,8 @@ const plantSeeds = [
     plantPests: 'Aphids, hornworms, whiteflies',
     plantDiseases: 'Blight, wilt, powdery mildew',
     spacing: 18,
-    plantsPerSquareFoot: 0.25,
-    color: '#e77c7c',
+    growthType: PlantGrowthType.VERTICAL,
+    isVerticalGrower: true
   },
   {
     plantName: 'Carrot',
@@ -38,8 +44,8 @@ const plantSeeds = [
     plantPests: 'Carrot rust flies, nematodes',
     plantDiseases: 'Leaf blight, powdery mildew',
     spacing: 3,
-    plantsPerSquareFoot: 16,
-    color: '#e9a978',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Lettuce',
@@ -56,8 +62,8 @@ const plantSeeds = [
     plantPests: 'Aphids, slugs, snails',
     plantDiseases: 'Downy mildew, bottom rot',
     spacing: 6,
-    plantsPerSquareFoot: 4,
-    color: '#8dd8b9',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Cucumber',
@@ -74,8 +80,8 @@ const plantSeeds = [
     plantPests: 'Cucumber beetles, aphids',
     plantDiseases: 'Powdery mildew, bacterial wilt',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#78c2a4',
+    growthType: PlantGrowthType.VERTICAL,
+    isVerticalGrower: true
   },
   {
     plantName: 'Zucchini',
@@ -92,8 +98,8 @@ const plantSeeds = [
     plantPests: 'Squash bugs, squash vine borers',
     plantDiseases: 'Powdery mildew, blossom end rot',
     spacing: 18,
-    plantsPerSquareFoot: 0.25,
-    color: '#7fb3da',
+    growthType: PlantGrowthType.VERTICAL,
+    isVerticalGrower: true
   },
   {
     plantName: 'Pumpkin',
@@ -110,8 +116,8 @@ const plantSeeds = [
     plantPests: 'Squash bugs, cucumber beetles',
     plantDiseases: 'Powdery mildew, downy mildew',
     spacing: 36,
-    plantsPerSquareFoot: 0.25,
-    color: '#e2a173',
+    growthType: PlantGrowthType.VERTICAL,
+    isVerticalGrower: true
   },
   {
     plantName: 'Sunflower',
@@ -128,8 +134,8 @@ const plantSeeds = [
     plantPests: 'Aphids, beetles',
     plantDiseases: 'Rust, powdery mildew',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#ecd279',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Basil',
@@ -146,8 +152,8 @@ const plantSeeds = [
     plantPests: 'Aphids, slugs, Japanese beetles',
     plantDiseases: 'Downy mildew, fusarium wilt',
     spacing: 4,
-    plantsPerSquareFoot: 9,
-    color: '#97c283',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Green Pepper',
@@ -164,8 +170,8 @@ const plantSeeds = [
     plantPests: 'Aphids, spider mites, whiteflies',
     plantDiseases: 'Bacterial spot, powdery mildew',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#e28b89',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Broccoli',
@@ -182,8 +188,8 @@ const plantSeeds = [
     plantPests: 'Cabbage worms, aphids, flea beetles',
     plantDiseases: 'Black rot, downy mildew',
     spacing: 18,
-    plantsPerSquareFoot: 0.25,
-    color: '#89bb9e',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Cauliflower',
@@ -200,8 +206,8 @@ const plantSeeds = [
     plantPests: 'Cabbage worms, aphids, flea beetles',
     plantDiseases: 'Black rot, downy mildew',
     spacing: 18,
-    plantsPerSquareFoot: 0.25,
-    color: '#e0e0e0',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Onion',
@@ -218,8 +224,8 @@ const plantSeeds = [
     plantPests: 'Onion maggots, thrips',
     plantDiseases: 'Downy mildew, purple blotch',
     spacing: 4,
-    plantsPerSquareFoot: 9,
-    color: '#b8c4d0',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Garlic',
@@ -236,8 +242,8 @@ const plantSeeds = [
     plantPests: 'Thrips, nematodes',
     plantDiseases: 'White rot, rust',
     spacing: 4,
-    plantsPerSquareFoot: 9,
-    color: '#d5d8dd',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Potato',
@@ -254,8 +260,8 @@ const plantSeeds = [
     plantPests: 'Colorado potato beetle, aphids',
     plantDiseases: 'Late blight, scab',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#c4b396',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Sweet Potato',
@@ -272,8 +278,8 @@ const plantSeeds = [
     plantPests: 'Sweet potato weevils, wireworms',
     plantDiseases: 'Root rot, scurf',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#d49c82',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Corn',
@@ -290,8 +296,8 @@ const plantSeeds = [
     plantPests: 'Corn earworms, corn borers',
     plantDiseases: 'Corn smut, leaf blight',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#e6d7a1',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Turnip',
@@ -308,8 +314,8 @@ const plantSeeds = [
     plantPests: 'Flea beetles, aphids',
     plantDiseases: 'Club root, black rot',
     spacing: 4,
-    plantsPerSquareFoot: 9,
-    color: '#ccd5ae',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Squash',
@@ -326,8 +332,8 @@ const plantSeeds = [
     plantPests: 'Squash bugs, cucumber beetles',
     plantDiseases: 'Powdery mildew, downy mildew',
     spacing: 24,
-    plantsPerSquareFoot: 0.25,
-    color: '#ffc300',
+    growthType: PlantGrowthType.VERTICAL,
+    isVerticalGrower: true
   },
   {
     plantName: 'Mint',
@@ -344,8 +350,8 @@ const plantSeeds = [
     plantPests: 'Spider mites, aphids',
     plantDiseases: 'Rust, powdery mildew',
     spacing: 4,
-    plantsPerSquareFoot: 9,
-    color: '#2a9d8f',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Rosemary',
@@ -362,8 +368,8 @@ const plantSeeds = [
     plantPests: 'Spider mites, aphids',
     plantDiseases: 'Powdery mildew, root rot',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#386641',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Thyme',
@@ -380,8 +386,8 @@ const plantSeeds = [
     plantPests: 'Spider mites, aphids',
     plantDiseases: 'Root rot, botrytis',
     spacing: 6,
-    plantsPerSquareFoot: 4,
-    color: '#606c38',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Cherry Tomato',
@@ -398,8 +404,8 @@ const plantSeeds = [
     plantPests: 'Aphids, hornworms, whiteflies',
     plantDiseases: 'Blight, wilt, powdery mildew',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#e63946',
+    growthType: PlantGrowthType.VERTICAL,
+    isVerticalGrower: true
   },
   {
     plantName: 'Asparagus',
@@ -416,8 +422,8 @@ const plantSeeds = [
     plantPests: 'Asparagus beetles, aphids',
     plantDiseases: 'Rust, fusarium crown rot',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#8dbd8a',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Beet',
@@ -434,8 +440,8 @@ const plantSeeds = [
     plantPests: 'Leaf miners, aphids',
     plantDiseases: 'Leaf spot, downy mildew',
     spacing: 4,
-    plantsPerSquareFoot: 9,
-    color: '#8a284c',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Red Pepper',
@@ -452,8 +458,8 @@ const plantSeeds = [
     plantPests: 'Aphids, spider mites',
     plantDiseases: 'Bacterial spot, blossom end rot',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#c82333',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Celery',
@@ -470,10 +476,9 @@ const plantSeeds = [
     plantPests: 'Aphids, slugs',
     plantDiseases: 'Early blight, pink rot',
     spacing: 6,
-    plantsPerSquareFoot: 4,
-    color: '#a5cd9f',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
-
   {
     plantName: 'Cabbage',
     plantType: 'Vegetable',
@@ -489,8 +494,8 @@ const plantSeeds = [
     plantPests: 'Cabbage worms, aphids, flea beetles',
     plantDiseases: 'Black rot, clubroot',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#adcfa8',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Eggplant',
@@ -507,8 +512,8 @@ const plantSeeds = [
     plantPests: 'Flea beetles, spider mites',
     plantDiseases: 'Verticillium wilt, blossom end rot',
     spacing: 18,
-    plantsPerSquareFoot: 0.25,
-    color: '#614051',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Kale',
@@ -525,8 +530,8 @@ const plantSeeds = [
     plantPests: 'Aphids, cabbage worms',
     plantDiseases: 'Downy mildew, powdery mildew',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#3a5f0b',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Spinach',
@@ -543,8 +548,8 @@ const plantSeeds = [
     plantPests: 'Aphids, leaf miners',
     plantDiseases: 'Downy mildew, leaf spot',
     spacing: 3,
-    plantsPerSquareFoot: 16,
-    color: '#304d3a',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Strawberry',
@@ -561,8 +566,8 @@ const plantSeeds = [
     plantPests: 'Slugs, aphids, spider mites',
     plantDiseases: 'Gray mold, leaf spot',
     spacing: 6,
-    plantsPerSquareFoot: 4,
-    color: '#e63946',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Blueberry',
@@ -579,8 +584,8 @@ const plantSeeds = [
     plantPests: 'Blueberry maggots, aphids',
     plantDiseases: 'Mummy berry, powdery mildew',
     spacing: 18,
-    plantsPerSquareFoot: 0.25,
-    color: '#457b9d',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Raspberry',
@@ -597,8 +602,8 @@ const plantSeeds = [
     plantPests: 'Japanese beetles, aphids',
     plantDiseases: 'Gray mold, cane blight',
     spacing: 18,
-    plantsPerSquareFoot: 0.25,
-    color: '#d00000',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Watermelon',
@@ -615,8 +620,8 @@ const plantSeeds = [
     plantPests: 'Cucumber beetles, aphids',
     plantDiseases: 'Powdery mildew, fusarium wilt',
     spacing: 36,
-    plantsPerSquareFoot: 0.25,
-    color: '#6a994e',
+    growthType: PlantGrowthType.VERTICAL,
+    isVerticalGrower: true
   },
   {
     plantName: 'Cantaloupe',
@@ -633,8 +638,8 @@ const plantSeeds = [
     plantPests: 'Cucumber beetles, aphids',
     plantDiseases: 'Powdery mildew, downy mildew',
     spacing: 36,
-    plantsPerSquareFoot: 0.25,
-    color: '#dda15e',
+    growthType: PlantGrowthType.VERTICAL,
+    isVerticalGrower: true
   },
   {
     plantName: 'Radish',
@@ -651,8 +656,8 @@ const plantSeeds = [
     plantPests: 'Flea beetles, root maggots',
     plantDiseases: 'Downy mildew, black root',
     spacing: 3,
-    plantsPerSquareFoot: 16,
-    color: '#e5383b',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Peas',
@@ -669,8 +674,8 @@ const plantSeeds = [
     plantPests: 'Aphids, pea moths',
     plantDiseases: 'Powdery mildew, root rot',
     spacing: 4,
-    plantsPerSquareFoot: 9,
-    color: '#90be6d',
+    growthType: PlantGrowthType.VERTICAL_BEAN_PEA,
+    isVerticalGrower: true
   },
   {
     plantName: 'Beans',
@@ -687,8 +692,8 @@ const plantSeeds = [
     plantPests: 'Bean beetles, aphids',
     plantDiseases: 'Bacterial blight, rust',
     spacing: 4,
-    plantsPerSquareFoot: 9,
-    color: '#43aa8b',
+    growthType: PlantGrowthType.VERTICAL_BEAN_PEA,
+    isVerticalGrower: true
   },
   {
     plantName: 'Okra',
@@ -705,8 +710,8 @@ const plantSeeds = [
     plantPests: 'Aphids, stink bugs',
     plantDiseases: 'Powdery mildew, leaf spot',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#588157',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Brussels Sprouts',
@@ -723,8 +728,8 @@ const plantSeeds = [
     plantPests: 'Aphids, cabbage worms',
     plantDiseases: 'Black rot, clubroot',
     spacing: 18,
-    plantsPerSquareFoot: 0.25,
-    color: '#a7c957',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Artichoke',
@@ -741,8 +746,8 @@ const plantSeeds = [
     plantPests: 'Aphids, slugs',
     plantDiseases: 'Powdery mildew, botrytis',
     spacing: 36,
-    plantsPerSquareFoot: 0.25,
-    color: '#606c38',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Yellow Pepper',
@@ -759,8 +764,8 @@ const plantSeeds = [
     plantPests: 'Aphids, spider mites',
     plantDiseases: 'Bacterial spot, blossom end rot',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#c82333',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   },
   {
     plantName: 'Chili Pepper',
@@ -777,8 +782,8 @@ const plantSeeds = [
     plantPests: 'Aphids, spider mites',
     plantDiseases: 'Bacterial spot, blossom end rot',
     spacing: 12,
-    plantsPerSquareFoot: 1,
-    color: '#c82333',
+    growthType: PlantGrowthType.NORMAL,
+    isVerticalGrower: false
   }
 ];
 
@@ -809,4 +814,5 @@ const seedDB = async () => {
     process.exit(0);
   }
 };
+
 seedDB();

@@ -2,7 +2,7 @@ import { User } from '../models/index.js';
 import GardenPlan from '../models/GardenPlan.js';
 import Plant from '../models/Plant.js';
 import PlantPlacement from '../models/PlantPlacement.js';
-import { calculatePlantsPerSquareFoot } from '../utils/helpers.js';
+import { calculatePlantsPerSquareFoot, PlantGrowthType } from '../utils/helpers.js';
 import { signToken, AuthenticationError } from '../utils/auth.js';
 import { getPlantCareParagraph, getPlantPestInformation } from '../utils/openai.js';
 import {
@@ -97,7 +97,6 @@ const resolvers: IResolvers = {
           row: plant.row,
           col: plant.col,
           plantName: plant.plantName,
-          color: plant.color,
           spacing: plant.spacing,
           plantsPerSquareFoot: plant.plantsPerSquareFoot,
           sunlight: plant.sunlight,
@@ -407,17 +406,27 @@ const resolvers: IResolvers = {
       
       addPlant: async (_parent: any, plantData: any) => {
         try {
-        // Calculate plants per square foot if not provided
-          if (!plantData.plantsPerSquareFoot) {
-            plantData.plantsPerSquareFoot = calculatePlantsPerSquareFoot(plantData.spacing);
+          // Set isVerticalGrower based on growthType
+          if (plantData.growthType) {
+            plantData.isVerticalGrower = 
+              plantData.growthType === PlantGrowthType.VERTICAL || 
+              plantData.growthType === PlantGrowthType.VERTICAL_BEAN_PEA;
           }
-    
-        // Create new plant
-        const newPlant = await Plant.create(plantData);
-        return newPlant;
+          
+          // Calculate plants per square foot if not provided
+          if (!plantData.plantsPerSquareFoot) {
+            plantData.plantsPerSquareFoot = calculatePlantsPerSquareFoot(
+              plantData.spacing, 
+              plantData.growthType || PlantGrowthType.NORMAL
+            );
+          }
+      
+          // Create new plant
+          const newPlant = await Plant.create(plantData);
+          return newPlant;
         } catch (error: any) {
-        console.error('Error adding plant:', error);
-        throw new Error(`Failed to add plant: ${error.message}`);
+          console.error('Error adding plant:', error);
+          throw new Error(`Failed to add plant: ${error.message}`);
         }
       }
 

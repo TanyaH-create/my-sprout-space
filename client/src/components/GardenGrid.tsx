@@ -1,5 +1,7 @@
 import React from 'react';
 import { Plant, PlotSize } from '../types/garden';
+import { formatPlantDensity } from '../utils/plantUtils';
+import { resolveImagePath, handleImageError } from '../utils/imageUtils';
 
 interface GardenGridProps {
   garden: (Plant | null)[][];
@@ -57,32 +59,29 @@ export const GardenGrid: React.FC<GardenGridProps> = ({
                     }}
                   >
                     <div className="plant-image-container" style={{ position: 'relative' }}>
-                      <img
-                        src={cell.image}
+                    <img
+                        src={resolveImagePath(cell.image)}
                         alt={cell.name}
-                        style={{ width: '40px', height: '40px', objectFit: 'contain' }}
+                        style={{ width: '25px', height: '25px', objectFit: 'contain' }}
+                        onError={(e) => handleImageError(e, cell.name)}
                       />
-                      <div style={{
-                        position: 'absolute',
-                        top: '-5px',
-                        right: '-5px',
-                        backgroundColor: 'black',
-                        color: 'white',
-                        width: '20px',
-                        height: '20px',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '12px',
-                        fontWeight: 'bold'
-                      }}>
-                        {cell.plantsPerSquareFoot}
-                      </div>
                     </div>
-                    <div style={{ fontSize: '11px', fontWeight: 'bold', marginTop: '4px' }}>
+                    <div style={{ fontSize: '10px', fontWeight: 'bold' }}>
                       {cell.name}
                     </div>
+                    {cell.variety && (
+                      <div style={{ fontSize: '8px', marginTop: '1px' }}>
+                        {cell.variety}
+                      </div>
+                    )}
+                    <div style={{ fontSize: '8px', marginTop: '1px' }}>
+                      {formatPlantDensity(cell.plantsPerSquareFoot)}
+                    </div>
+                    {cell.isVerticalGrower && (
+                      <div style={{ fontSize: '8px', marginTop: '1px', color: '#4CAF50' }}>
+                        Grow Vertical
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
