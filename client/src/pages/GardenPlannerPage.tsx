@@ -7,7 +7,7 @@ import { SAVE_GARDEN_MUTATION } from '../graphQL/mutations';
 import { GET_GARDEN_BY_ID, GET_ALL_PLANTS } from '../graphQL/queries';
 
 import '../styles/Gardenplanner.css';
-import { Plant, PlotSize } from '../types/garden';
+import { Plant, PlotSize, DBPlant } from '../types/garden';
 import { convertDbPlantToLocalPlant, PlantGrowthType } from '../utils/plantUtils';
 import { useGardenState } from '../hooks/useGardenState';
 import { usePlantSearch } from '../hooks/usePlantSearch';
@@ -68,7 +68,7 @@ const GardenPlannerPage: React.FC = () => {
   });
 
   // Query to get all plants
-  const { loading: plantsLoading, error: plantsError, data: plantsData, refetch: refetchPlants } = useQuery(GET_ALL_PLANTS, {
+  const { loading: plantsLoading, error: plantsError, data: plantsData } = useQuery(GET_ALL_PLANTS, {
     onError: (error) => {
       console.error('Error loading plants:', error);
     }
@@ -179,6 +179,7 @@ const GardenPlannerPage: React.FC = () => {
             newPlants.push({
               id: plant.plantId,
               name: plant.plantName || "Unknown Plant",
+              variety: plant.plantVariety || "",
               width: 1,
               height: 1,
               spacing: parseInt(plant.spacing, 10) || 12,
@@ -247,7 +248,7 @@ const GardenPlannerPage: React.FC = () => {
     setShowAddPlantForm(true);
   };
   
-  const handlePlantAdded = (newPlant) => {
+  const handlePlantAdded = (newPlant: DBPlant) => {
     // Add the newly created plant to the plantTypes state
     const convertedPlant = convertDbPlantToLocalPlant(newPlant);
     setPlantTypes(prevPlants => [...prevPlants, convertedPlant]);
