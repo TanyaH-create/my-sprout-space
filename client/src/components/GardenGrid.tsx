@@ -70,15 +70,15 @@ export const GardenGrid: React.FC<GardenGridProps> = ({
                       {cell.name}
                     </div>
                     {cell.variety && (
-                      <div style={{ fontSize: '8px', marginTop: '1px' }}>
+                      <div style={{ fontSize: '8px' }}>
                         {cell.variety}
                       </div>
                     )}
-                    <div style={{ fontSize: '8px', marginTop: '1px' }}>
+                    <div style={{ fontSize: '10px' }}>
                       {formatPlantDensity(cell.plantsPerSquareFoot)}
                     </div>
                     {cell.isVerticalGrower && (
-                      <div style={{ fontSize: '8px', marginTop: '1px', color: '#4CAF50' }}>
+                      <div style={{ fontSize: '10px' }}>
                         Grow Vertical
                       </div>
                     )}

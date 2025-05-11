@@ -20,6 +20,8 @@ export const calculatePlantsPerSquareFoot = (
   spacing: number, 
   growthType: PlantGrowthType = PlantGrowthType.NORMAL
 ): number => {
+
+
   // Handle vertical growing plants first
   if (growthType === PlantGrowthType.VERTICAL) {
     return 1; // 1 plant per square foot for vertical plants
@@ -29,15 +31,16 @@ export const calculatePlantsPerSquareFoot = (
     return 9; // 9 plants per square foot for vertical beans and peas
   }
   
-  // Normal plants based on spacing
-  if (spacing >= 36) return 0.25; // 1 plant per 4 square feet
-  if (spacing >= 24) return 0.33; // 1 plant per 3 square feet
-  if (spacing >= 18) return 0.5;  // 1 plant per 2 square feet
-  if (spacing >= 12) return 1;    // 1 plant per square foot
-  if (spacing >= 8) return 2;     // 2 plants per square foot
-  if (spacing >= 6) return 4;     // 4 plants per square foot
-  if (spacing >= 4) return 9;     // 9 plants per square foot
-  return 16;                      // 16 plants per square foot (3" spacing or less)
+    // Normal plants based on spacing
+    if (spacing >= 36) return 0.25; // 1 plant per 4 square feet
+    if (spacing >= 24) return 0.33; // 1 plant per 3 square feet
+    if (spacing >= 18) return 0.5;  // 1 plant per 2 square feet
+    if (spacing >= 12) return 1;    // 1 plant per square foot
+    if (spacing >= 8) return 2;     // 2 plants per square foot
+    if (spacing >= 6) return 4;     // 4 plants per square foot
+    if (spacing >= 4) return 9;     // 9 plants per square foot
+    return 16;                      // 16 plants per square foot (3" spacing or less)
+
 };
 
 /**
@@ -61,8 +64,15 @@ export const formatPlantDensity = (plantsPerSquareFoot: number): string => {
  * @returns Local plant object for use in the UI
  */
 export const convertDbPlantToLocalPlant = (dbPlant: DBPlant): Plant => {
-
+  const growthType = dbPlant.growthType === 'vertical' ? PlantGrowthType.VERTICAL :
+                     dbPlant.growthType === 'vertical_bean_pea' ? PlantGrowthType.VERTICAL_BEAN_PEA :
+                     PlantGrowthType.NORMAL;
   
+  const calculatedPlantsPerSquareFoot = calculatePlantsPerSquareFoot(
+     dbPlant.spacing, 
+     growthType
+  );
+
   return {
     id: dbPlant._id,
     name: dbPlant.plantName,
@@ -76,7 +86,7 @@ export const convertDbPlantToLocalPlant = (dbPlant: DBPlant): Plant => {
                 dbPlant.growthType === 'vertical_bean_pea' ? PlantGrowthType.VERTICAL_BEAN_PEA :
                 PlantGrowthType.NORMAL,
     isVerticalGrower: dbPlant.isVerticalGrower || false, 
-    plantsPerSquareFoot: dbPlant.plantsPerSquareFoot,
+    plantsPerSquareFoot: calculatedPlantsPerSquareFoot,
     image: resolveImagePath(dbPlant.plantImage)
   };
   
