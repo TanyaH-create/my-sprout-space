@@ -63,16 +63,12 @@ export const PlantPalette: React.FC<PlantPaletteProps> = ({
       </div>
       <span style={{ fontSize: '12px', textAlign: 'center' }}>{plant.name}</span>
       <span style={{ fontSize: '12px', textAlign: 'center' }}>{plant.variety}</span>
-      <div className="plant-per-foot" style={{
-        fontSize: '10px',
-        color: '#666',
-        backgroundColor: '#f0f0f0',
-        padding: '2px 5px',
-        borderRadius: '10px',
-        marginTop: '2px'
-      }}>
+      <span className="plant-per-foot" style={{ fontSize: '12px', textAlign: 'center' }}>
         {formatPlantDensity(plant.plantsPerSquareFoot)}
-      </div>
+      </span >
+      <span style={{ fontSize: '10px', textAlign: 'center' }}>
+         {(plant.isVerticalGrower)? 'Grow Vertical' : ''}
+      </span>
     </div>
   );
 })}
